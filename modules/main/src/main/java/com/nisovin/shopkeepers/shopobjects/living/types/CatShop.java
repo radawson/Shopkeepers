@@ -116,44 +116,32 @@ public class CatShop extends SittableShop<Cat> {
 
 	private ItemStack getCatTypeEditorItem() {
 		ItemStack iconItem = new ItemStack(Material.LEATHER_CHESTPLATE);
-		switch (this.getCatType()) {
-		case TABBY:
+		String key = this.getCatType().getKey().getKey();
+		if (key.equals("tabby")) {
 			ItemUtils.setLeatherColor(iconItem, Color.BLACK.mixColors(Color.ORANGE));
-			break;
-		case ALL_BLACK:
+		} else if (key.equals("all_black")) {
 			ItemUtils.setLeatherColor(iconItem, Color.BLACK);
-			break;
-		case BLACK:
+		} else if (key.equals("black")) {
 			ItemUtils.setLeatherColor(iconItem, Color.BLACK.mixDyes(DyeColor.GRAY));
-			break;
-		case BRITISH_SHORTHAIR:
+		} else if (key.equals("british_shorthair")) {
 			ItemUtils.setLeatherColor(iconItem, Color.SILVER);
-			break;
-		case CALICO:
+		} else if (key.equals("calico")) {
 			ItemUtils.setLeatherColor(iconItem, Color.ORANGE.mixDyes(DyeColor.BROWN));
-			break;
-		case JELLIE:
+		} else if (key.equals("jellie")) {
 			ItemUtils.setLeatherColor(iconItem, Color.GRAY);
-			break;
-		case PERSIAN:
+		} else if (key.equals("persian")) {
 			ItemUtils.setLeatherColor(iconItem, Color.WHITE.mixDyes(DyeColor.ORANGE));
-			break;
-		case RAGDOLL:
+		} else if (key.equals("ragdoll")) {
 			ItemUtils.setLeatherColor(iconItem, Color.WHITE.mixDyes(DyeColor.BROWN));
-			break;
-		case RED:
+		} else if (key.equals("red")) {
 			ItemUtils.setLeatherColor(iconItem, Color.ORANGE);
-			break;
-		case SIAMESE:
+		} else if (key.equals("siamese")) {
 			ItemUtils.setLeatherColor(iconItem, Color.GRAY.mixDyes(DyeColor.BROWN));
-			break;
-		case WHITE:
+		} else if (key.equals("white")) {
 			ItemUtils.setLeatherColor(iconItem, Color.WHITE);
-			break;
-		default:
+		} else {
 			// Unknown type:
 			ItemUtils.setLeatherColor(iconItem, Color.PURPLE);
-			break;
 		}
 		ItemUtils.setDisplayNameAndLore(iconItem,
 				Messages.buttonCatVariant,

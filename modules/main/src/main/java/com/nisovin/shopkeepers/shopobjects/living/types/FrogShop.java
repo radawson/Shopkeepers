@@ -99,20 +99,16 @@ public class FrogShop extends BabyableShop<Frog> {
 
 	private ItemStack getVariantEditorItem() {
 		ItemStack iconItem;
-		switch (this.getVariant()) {
-		case TEMPERATE:
+		String key = this.getVariant().getKey().getKey();
+		if (key.equals("temperate")) {
 			iconItem = new ItemStack(ItemUtils.getWoolType(DyeColor.ORANGE));
-			break;
-		case WARM:
+		} else if (key.equals("warm")) {
 			iconItem = new ItemStack(ItemUtils.getWoolType(DyeColor.LIGHT_GRAY));
-			break;
-		case COLD:
+		} else if (key.equals("cold")) {
 			iconItem = new ItemStack(ItemUtils.getWoolType(DyeColor.GREEN));
-			break;
-		default:
+		} else {
 			// Unknown:
 			iconItem = new ItemStack(ItemUtils.getWoolType(DyeColor.PURPLE));
-			break;
 		}
 		ItemUtils.setDisplayNameAndLore(iconItem,
 				Messages.buttonFrogVariant,

@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
@@ -197,7 +199,8 @@ public class ServerAssumptionsTest {
 		itemMeta.setEnchantmentGlintOverride(true);
 		itemMeta.addEnchant(Enchantment.UNBREAKING, 1, true);
 		itemMeta.addEnchant(Enchantment.SHARPNESS, 2, true);
-		itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
+		itemMeta.addAttributeModifier(
+				Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.attack_speed")),
 				new AttributeModifier(
 						new UUID(1L, 1L),
 						"attack speed bonus",
@@ -206,7 +209,8 @@ public class ServerAssumptionsTest {
 						EquipmentSlotGroup.HAND
 				)
 		);
-		itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
+		itemMeta.addAttributeModifier(
+				Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.attack_speed")),
 				new AttributeModifier(
 						new UUID(2L, 2L),
 						"attack speed bonus 2",
@@ -215,7 +219,8 @@ public class ServerAssumptionsTest {
 						EquipmentSlotGroup.OFFHAND
 				)
 		);
-		itemMeta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH,
+		itemMeta.addAttributeModifier(
+				Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.max_health")),
 				new AttributeModifier(
 						new UUID(3L, 3L),
 						"max health bonus",

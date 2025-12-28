@@ -101,54 +101,39 @@ public class ZombieVillagerShop extends ZombieShop<ZombieVillager> {
 
 	private ItemStack getProfessionEditorItem() {
 		ItemStack iconItem;
-		switch (this.getProfession()) {
-		case ARMORER:
+		String key = this.getProfession().getKey().getKey();
+		if (key.equals("armorer")) {
 			iconItem = new ItemStack(Material.BLAST_FURNACE);
-			break;
-		case BUTCHER:
+		} else if (key.equals("butcher")) {
 			iconItem = new ItemStack(Material.SMOKER);
-			break;
-		case CARTOGRAPHER:
+		} else if (key.equals("cartographer")) {
 			iconItem = new ItemStack(Material.CARTOGRAPHY_TABLE);
-			break;
-		case CLERIC:
+		} else if (key.equals("cleric")) {
 			iconItem = new ItemStack(Material.BREWING_STAND);
-			break;
-		case FARMER:
+		} else if (key.equals("farmer")) {
 			iconItem = new ItemStack(Material.WHEAT); // Instead of COMPOSTER
-			break;
-		case FISHERMAN:
+		} else if (key.equals("fisherman")) {
 			iconItem = new ItemStack(Material.FISHING_ROD); // Instead of BARREL
-			break;
-		case FLETCHER:
+		} else if (key.equals("fletcher")) {
 			iconItem = new ItemStack(Material.FLETCHING_TABLE);
-			break;
-		case LEATHERWORKER:
+		} else if (key.equals("leatherworker")) {
 			iconItem = new ItemStack(Material.LEATHER); // Instead of CAULDRON
-			break;
-		case LIBRARIAN:
+		} else if (key.equals("librarian")) {
 			iconItem = new ItemStack(Material.LECTERN);
-			break;
-		case MASON:
+		} else if (key.equals("mason")) {
 			iconItem = new ItemStack(Material.STONECUTTER);
-			break;
-		case SHEPHERD:
+		} else if (key.equals("shepherd")) {
 			iconItem = new ItemStack(Material.LOOM);
-			break;
-		case TOOLSMITH:
+		} else if (key.equals("toolsmith")) {
 			iconItem = new ItemStack(Material.SMITHING_TABLE);
-			break;
-		case WEAPONSMITH:
+		} else if (key.equals("weaponsmith")) {
 			iconItem = new ItemStack(Material.GRINDSTONE);
-			break;
-		case NITWIT:
+		} else if (key.equals("nitwit")) {
 			iconItem = new ItemStack(Material.LEATHER_CHESTPLATE);
 			ItemUtils.setLeatherColor(iconItem, Color.GREEN);
-			break;
-		case NONE:
-		default:
+		} else {
+			// NONE or unknown
 			iconItem = new ItemStack(Material.BARRIER);
-			break;
 		}
 		assert iconItem != null;
 		ItemUtils.setDisplayNameAndLore(iconItem,
