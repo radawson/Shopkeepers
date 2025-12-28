@@ -1,0 +1,20 @@
+# Shopkeepers Development Rules
+
+## API Preferences
+- **Always prefer PaperAPI over deprecated Bukkit functions**
+- When Bukkit API methods are deprecated or removed, use Paper API equivalents
+- Use Paper's Tag API (e.g., `Tag.ALL_SIGNS`, `Tag.LEAVES`) instead of checking individual Material types
+- Prefer modern Material names and Paper-specific features when available
+
+## Code Style
+- Follow existing code style and patterns
+- Include, expand, and enhance docstrings
+- Do not remove comments unless they are no longer valid
+- Update documentation with any applicable additions or changes
+- When there are multiple functions, variables, or text keys we should keep them in order, except for getters and setters, which will be ordered by the variable they get or set
+- Attempt to replace any deprecated functions or variables that are identified in the linter
+
+## Compatibility
+- Maintain compatibility with multiple Minecraft versions using compatibility modules
+- Use version-specific compatibility classes when necessary
+
