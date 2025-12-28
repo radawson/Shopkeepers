@@ -55,6 +55,13 @@ Desktop.ini
 !gradle/wrapper/gradle-wrapper.jar
 gradle/wrapper/gradle-wrapper.properties.bak
 
+# Gradle lock files
+*.lock
+*.lockfile
+gradle.lockfile
+dependency-lock.json
+gradle/dependency-lock.json
+
 ############
 ## Build outputs
 ############
@@ -65,6 +72,14 @@ gradle/wrapper/gradle-wrapper.properties.bak
 *.ear
 *.log
 out/
+
+# Gradle build artifacts
+*.reobf.jar
+*-paper.jar
+*-all.jar
+*-shadow.jar
+dist/
+libs/
 
 ############
 ## Test outputs
