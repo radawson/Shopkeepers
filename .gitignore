@@ -29,8 +29,11 @@ local.properties
 ## IntelliJ
 #############
 
-.idea
+.idea/
 *.iml
+*.ipr
+*.iws
+.vscode/
 
 ############
 ## OS
@@ -46,7 +49,34 @@ Desktop.ini
 .DS_Store
 
 ############
+## Gradle
+############
+
+!gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties.bak
+
+############
+## Build outputs
+############
+
+*.class
+*.jar
+*.war
+*.ear
+*.log
+out/
+
+############
+## Test outputs
+############
+
+test-results/
+test-reports/
+
+############
+## Project specific
+############
 
 **/logs
 jabba
-repo
+repo/
