@@ -1,0 +1,4 @@
+extra["craftbukkitVersion"] = "1.21.11-R0.1-SNAPSHOT"
+
+apply(from = rootProject.file("modules/shared/nmsModulePaper.gradle.kts"))
+

@@ -1,40 +1,40 @@
 plugins {
-	id 'java-library'
-	id 'maven-publish'
-	id 'com.gradleup.shadow'
+	id("java-library")
+	id("maven-publish")
+	id("com.gradleup.shadow")
 }
 
 // Single NMS module for Paper 1.21.11
-def nmsModule = ':shopkeepers-v1_21_11'
+val nmsModule = ":shopkeepers-v1_21_11"
 
 configurations {
-	shaded
+	create("shaded")
 }
 
 dependencies {
-	api project(':shopkeepers-main') // Includes the Shopkeepers API
+	api(project(":shopkeepers-main")) // Includes the Shopkeepers API
 	// Separate 'shaded' configuration: Omits these dependencies from the transitively inherited
 	// apiElements and runtimeElements (as well as from the generated POM).
 	// We cannot use compileOnly for this, because the java-library plugin would then cause this
 	// module to depend on the compiled classes (compileJava task) instead of the final jar (jar
 	// task). This would affect the order in which these dependency tasks are executed during a
 	// build. All modules now use Mojang mappings directly (Paper uses Mojang at runtime).
-	shaded project(path: nmsModule, configuration: 'remapped')
+	add("shaded", project(nmsModule, "remapped"))
 }
 
-jar {
+tasks.named<Jar>("jar") {
 	// We only require the output of the shadowJar task.
-	enabled = false
+	isEnabled = false
 }
 
-shadowJar {
-	configureJarTaskWithMavenMetadata(project, it)
+tasks.named<com.gradleup.shadow.ShadowJar>("shadowJar") {
+	configureJarTaskWithMavenMetadata(project, this)
 	// No classifier: Replaces the normal classifier-less jar file (if there is one).
-	archiveClassifier = ''
-	configurations = [project.configurations.runtimeClasspath, project.configurations.shaded]
+	archiveClassifier.set("")
+	configurations = listOf(project.configurations["runtimeClasspath"], project.configurations["shaded"])
 	dependencies {
-		include(project(':shopkeepers-api'))
-		include(project(':shopkeepers-main'))
+		include(project(":shopkeepers-api"))
+		include(project(":shopkeepers-main"))
 		include(project(nmsModule))
 	}
 	manifest {
@@ -46,20 +46,21 @@ shadowJar {
 configureShadowArtifacts(project)
 
 // Copies the final plugin jar into the build folder of the root project.
-task copyResults(type: Copy) {
-	from shadowJar
-	into rootProject.buildDir
+tasks.register<Copy>("copyResults") {
+	from(tasks.named("shadowJar"))
+	into(rootProject.buildDir)
 }
 
-assemble {
-	dependsOn shadowJar
-	dependsOn copyResults
+tasks.named("assemble") {
+	dependsOn(tasks.named("shadowJar"))
+	dependsOn(tasks.named("copyResults"))
 }
 
-publishing {
+configure<PublishingExtension> {
 	publications {
-		mavenJava(MavenPublication) { publication ->
-			configureShadowMavenPublication(project, publication)
+		create<MavenPublication>("mavenJava") {
+			configureShadowMavenPublication(project, this)
 		}
 	}
 }
+

@@ -1,14 +1,14 @@
 plugins {
-	id 'java-library'
-	id 'org.checkerframework'
-	id 'maven-publish'
-	id 'eclipse'
+	id("java-library")
+	id("org.checkerframework")
+	id("maven-publish")
+	id("eclipse")
 }
 
 configurations {
-	implementation {
+	named("implementation") {
 		// Removed from Bukkit in newer versions:
-		exclude group: 'commons-lang', module: 'commons-lang'
+		exclude(group = "commons-lang", module = "commons-lang")
 	}
 }
 
@@ -23,37 +23,38 @@ dependencies {
 	// We depend on the Spigot API here, instead of Bukkit, even though we only actually require
 	// Bukkit, because the Spigot repository does not contain Bukkit for certain versions. And we
 	// also run into issues when we try to build Bukkit/Spigot as part of the Jitpack build.
-	compileOnly libs.spigot.api
+	compileOnly(libs.spigot.api)
 	// For some reason, this needs to use the 'api' configuration in order for Eclipse to properly
 	// resolve our own JDK EEAs. compileOnly and compileOnlyApi are not sufficient, neither here nor
 	// in the dependent projects.
-	api project(':shopkeepers-external-annotations')
+	api(project(":shopkeepers-external-annotations"))
 }
 
 java {
 	withJavadocJar()
 }
 
-javadocJar {
-	configureJarTask(project, it)
+tasks.named<Jar>("javadocJar") {
+	configureJarTask(project, this)
 }
 
 // Copies the project's jars into the build folder of the root project.
-task copyResults(type: Copy) {
-	from jar
-	from javadocJar
-	into rootProject.buildDir
+tasks.register<Copy>("copyResults") {
+	from(tasks.named("jar"))
+	from(tasks.named("javadocJar"))
+	into(rootProject.layout.buildDirectory.get().asFile)
 }
 
-assemble {
-	dependsOn copyResults
+tasks.named("assemble") {
+	dependsOn(tasks.named("copyResults"))
 }
 
-publishing {
+configure<PublishingExtension> {
 	publications {
-		mavenJava(MavenPublication) { publication ->
-			configureMavenPublication(project, publication)
-			from project.components.java
+		create<MavenPublication>("mavenJava") {
+			configureMavenPublication(project, this)
+			from(components["java"])
 		}
 	}
 }
+

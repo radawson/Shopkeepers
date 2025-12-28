@@ -652,7 +652,7 @@ public final class InventoryUtils {
 	}
 
 	public static void closeInventoryDelayed(Player player) {
-		Bukkit.getScheduler().runTask(ShopkeepersPlugin.getInstance(), player::closeInventory);
+		Bukkit.getScheduler().runTask(ShopkeepersPlugin.getInstance(), (Runnable) player::closeInventory);
 	}
 
 	// This can for example be used during the handling of inventory interaction events.
