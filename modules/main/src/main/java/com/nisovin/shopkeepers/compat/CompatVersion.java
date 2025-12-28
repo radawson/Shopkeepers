@@ -42,9 +42,9 @@ public class CompatVersion {
 
 	/**
 	 * Gets the variant component of the compatibility version, e.g. {@link #VARIANT_PAPER}.
+	 * Paper-only builds always use the Paper variant.
 	 * 
-	 * @return the variant component of the compatibility version, or an empty String if there is no
-	 *         variant
+	 * @return the variant component of the compatibility version
 	 */
 	public String getVariant() {
 		return variant;
@@ -52,6 +52,7 @@ public class CompatVersion {
 
 	/**
 	 * Checks whether this compatibility version has a non-empty {@link #getVariant() variant}.
+	 * Paper-only builds always have a variant.
 	 * 
 	 * @return <code>true</code> if this compatibility version has a non-empty variant
 	 */

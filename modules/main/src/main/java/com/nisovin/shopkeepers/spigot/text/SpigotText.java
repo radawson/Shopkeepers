@@ -10,7 +10,6 @@ import com.nisovin.shopkeepers.api.internal.util.Unsafe;
 import com.nisovin.shopkeepers.compat.Compat;
 import com.nisovin.shopkeepers.debug.Debug;
 import com.nisovin.shopkeepers.debug.DebugOptions;
-import com.nisovin.shopkeepers.spigot.SpigotFeatures;
 import com.nisovin.shopkeepers.text.ClickEventText;
 import com.nisovin.shopkeepers.text.FormattingText;
 import com.nisovin.shopkeepers.text.HoverEventText;
@@ -41,17 +40,11 @@ public final class SpigotText {
 		// Skip sending if the (plain) message is empty: Allows disabling of messages.
 		if (message.isPlainTextEmpty()) return;
 
-		if (SpigotFeatures.isSpigotAvailable()) {
-			// Send message with additional text features:
-			Internal.sendMessage(recipient, message);
-		} else {
-			// Fallback: Send message as plain text.
-			String plainMessage = message.toPlainText();
-			TextUtils.sendMessage(recipient, plainMessage);
-		}
+		// Paper includes Spigot API, so we can always use enhanced text features
+		Internal.sendMessage(recipient, message);
 	}
 
-	// Separate class that gets only accessed if Spigot is present. Avoids class loading issues.
+	// Separate class for enhanced text component conversion. Paper includes Spigot API, so this is always available.
 	private static final class Internal {
 
 		// SENDING

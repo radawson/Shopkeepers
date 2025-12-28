@@ -21,8 +21,8 @@ import com.nisovin.shopkeepers.util.java.Validate;
 /**
  * The Shopkeepers plugin relies on functionality that is specific to the server version, e.g. to
  * support multiple Minecraft versions, and specific to the server implementation, such as internal
- * aspects of NMS and CraftBukkit that are not exposed via the Bukkit API. Additionally, there may
- * be differences between the Spigot and Paper server implementations and APIs.
+ * aspects of NMS and CraftBukkit that are not exposed via the Bukkit API. Since we're Paper-only,
+ * we use Paper's enhanced APIs and Mojang mappings.
  * <p>
  * {@link CompatProvider} hides these version and server implementation specific aspects behind an
  * interface that must be implemented for every supported combination of server implementation and
@@ -52,11 +52,10 @@ public interface CompatProvider {
 	public String getVersionId();
 
 	// This does not return null.
+	// For Paper 1.21.11, returns a CompatVersion for "1_21_11".
 	public default CompatVersion getCompatVersion() {
-		CompatVersion compatVersion = Compat.getCompatVersion(this.getVersionId());
-		// Not finding the compat version indicates a bug.
-		return Validate.State.notNull(compatVersion, "Could not find CompatVersion for '"
-				+ this.getVersionId() + "'!");
+		// Paper 1.21.11 uses Mojang mappings - mappings version is set to "unknown" since we no longer track it
+		return new CompatVersion("1_21_11", "1.21.11", "unknown");
 	}
 
 	public void overwriteLivingEntityAI(LivingEntity entity);

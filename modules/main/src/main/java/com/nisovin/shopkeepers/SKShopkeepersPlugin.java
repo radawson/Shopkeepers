@@ -57,7 +57,6 @@ import com.nisovin.shopkeepers.shopobjects.SKShopObjectTypesRegistry;
 import com.nisovin.shopkeepers.shopobjects.block.base.BaseBlockShops;
 import com.nisovin.shopkeepers.shopobjects.citizens.CitizensShops;
 import com.nisovin.shopkeepers.shopobjects.living.LivingShops;
-import com.nisovin.shopkeepers.spigot.SpigotFeatures;
 import com.nisovin.shopkeepers.storage.SKShopkeeperStorage;
 import com.nisovin.shopkeepers.tradelog.TradeLoggers;
 import com.nisovin.shopkeepers.tradenotifications.TradeNotifications;
@@ -310,18 +309,12 @@ public class SKShopkeepersPlugin extends JavaPlugin implements InternalShopkeepe
 
 		// Check for and initialize version dependent utilities:
 		// Example: MC_1_20_6.init();
-		MC_1_21_3.init();
-		MC_1_21_4.init();
+		// MC_1_21_3 and MC_1_21_4 features are always available in 1.21.11+
 
 		// Compat module:
 		Compat.getProvider().onEnable();
 
-		// Inform about Spigot exclusive features:
-		if (SpigotFeatures.isSpigotAvailable()) {
-			Log.debug("Spigot-based server found: Enabling Spigot exclusive features.");
-		} else {
-			Log.info("No Spigot-based server found: Disabling Spigot exclusive features!");
-		}
+		// Paper includes Spigot API, so all features are available
 
 		// Test server assumptions:
 		if (!ServerAssumptionsTest.run()) {

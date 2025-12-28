@@ -43,11 +43,12 @@ public final class ServerUtils {
 
 	/**
 	 * Checks if the server has access to Paper-specific API.
+	 * Paper-only builds always return true.
 	 * 
 	 * @return <code>true</code> if the server provides the Paper API
 	 */
 	public static boolean isPaper() {
-		return IS_PAPER;
+		return IS_PAPER; // Always true for Paper-only builds
 	}
 
 	public static String getMappingsVersion() {

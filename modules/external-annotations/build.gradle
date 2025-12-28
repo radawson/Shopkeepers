@@ -7,7 +7,9 @@ plugins {
 
 dependencies {
 	compileOnlyApi libs.jdt.annotations
-	compileOnlyApi libs.nonpe.java21
+	// no-npe dependency commented out - repository unavailable (https://raw.githubusercontent.com/vegardit/no-npe/mvn-snapshots-repo)
+	// This is optional for null analysis annotations and not required for the build
+	// compileOnlyApi libs.nonpe.java21
 	// Include the 'src/main/resources' contents on the compile classpath so that the ECJ compiler
 	// finds the external annotations when invoked from Gradle with "-annotationpath CLASSPATH":
 	compileOnlyApi files('src/main/resources')

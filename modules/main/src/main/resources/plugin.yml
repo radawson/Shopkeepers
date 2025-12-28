@@ -1,13 +1,13 @@
 name: Shopkeepers
 version: '${pluginVersion}'
-description: Custom villager shopkeepers
-authors: [nisovin, blablubbabc]
+description: Custom villager shopkeepers (Paper-only)
+authors: [nisovin, blablubbabc, clockworx]
 website: '${dboUrl}'
 # Loading after world management plugins and soft dependencies:
 softdepend: [Multiverse-Core, My Worlds, Transporter, Towny, WorldGuard, Citizens, ServiceIO, Gringotts, ChestShop]
 
 main: com.nisovin.shopkeepers.SKShopkeepersPlugin
-api-version: '1.20.6'
+api-version: '1.21'
 
 commands:
     shopkeeper:

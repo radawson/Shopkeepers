@@ -17,6 +17,8 @@ repositories {
 	maven { url = 'https://repo.glaremasters.me/repository/towny/' }
 	// ServiceIO (replaces Vault)
 	maven { url = 'https://repo.thenextlvl.net/releases' }
+	// Vault API (for compilation - ServiceIO implements Vault Economy interface)
+	maven { url = 'https://nexus.hc.to/content/repositories/pub_releases' }
 	// Towny alternative (needs a different group id), legacy VaultAPI (for compatibility)
 	maven { url = 'https://jitpack.io' }
 }
@@ -46,6 +48,11 @@ dependencies {
 	(compileOnly libs.citizens.main) { transitive = false }
 	// ServiceIO (replaces Vault - implements Vault Economy interface for compatibility)
 	compileOnly libs.service.io
+	// Vault API for compilation (ServiceIO implements Vault Economy interface)
+	compileOnly('com.github.MilkBowl:VaultAPI:1.7') {
+		exclude group: 'org.bukkit', module: 'bukkit'
+		exclude group: 'com.google.guava', module: 'guava'
+	}
 	compileOnly libs.bstats.bukkit
 
 	shaded libs.bstats.bukkit

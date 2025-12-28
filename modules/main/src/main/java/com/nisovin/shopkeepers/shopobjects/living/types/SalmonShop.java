@@ -71,9 +71,8 @@ public class SalmonShop extends SKLivingShopObject<Salmon> {
 	@Override
 	public List<Button> createEditorButtons() {
 		List<Button> editorButtons = super.createEditorButtons();
-		if (MC_1_21_3.isAvailable()) {
-			editorButtons.add(this.getVariantEditorButton());
-		}
+		// Salmon variants are always available in 1.21.11+
+		editorButtons.add(this.getVariantEditorButton());
 		return editorButtons;
 	}
 

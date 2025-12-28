@@ -1,92 +1,16 @@
 package com.nisovin.shopkeepers.compat;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import com.nisovin.shopkeepers.util.bukkit.ServerUtils;
 import com.nisovin.shopkeepers.util.java.Validate;
 import com.nisovin.shopkeepers.util.logging.Log;
 
 /**
  * Provides access to the {@link CompatProvider} implementation.
+ * Paper-only build targeting 1.21.11 - loads provider directly without version detection.
  */
 public final class Compat {
-
-	private static final Map<String, CompatVersion> COMPAT_VERSIONS = new LinkedHashMap<>();
-
-	private static void register(CompatVersion version) {
-		var compatVersion = version.getCompatVersion();
-		if (COMPAT_VERSIONS.containsKey(compatVersion)) {
-			throw new IllegalArgumentException("CompatVersion '" + compatVersion
-					+ "' is already registered!");
-		}
-
-		COMPAT_VERSIONS.put(compatVersion, version);
-	}
-
-	// We have to update and rebuild our compat code whenever the mappings changed.
-	// Changes to the mappings version do not necessarily align with a bump of the CraftBukkit
-	// version. If the mappings changed without a bump of the CraftBukkit version, we only support
-	// the latest mappings version: Our modules can only depend on specific CraftBukkit versions,
-	// and building different build versions of CraftBukkit that share the same artifact version
-	// overwrite each other inside the Maven repository. Also, we want to limit the number of
-	// CraftBukkit versions we depend on and build.
-	// Although they look similar, our compat versions do not necessarily match CraftBukkit's
-	// 'Minecraft Version': Our revision number (behind the 'R') is incremented for every new compat
-	// module for a specific major Minecraft version, which usually aligns with mappings updates for
-	// new minor Minecraft updates, whereas CraftBukkit may increment its 'Minecraft Version' less
-	// frequently. Also, our compat version may include additional tags, such as whether the module
-	// is paper-specific.
-	static {
-		// Registered in the order from latest to oldest.
-		register(new CompatVersion("1_21_R5_paper", "1.21.5", "7ecad754373a5fbc43d381d7450c53a5"));
-		register(new CompatVersion("1_21_R5", "1.21.5", "7ecad754373a5fbc43d381d7450c53a5"));
-		register(new CompatVersion("1_21_R4", "1.21.4", "60ac387ca8007aa018e6aeb394a6988c"));
-		register(new CompatVersion("1_21_R3", "1.21.3", "61a218cda78417b6039da56e08194083"));
-		// Note: 1.21.2 was immediately replaced by 1.21.3 and is not supported.
-		register(new CompatVersion("1_21_R2", "1.21.1", "7092ff1ff9352ad7e2260dc150e6a3ec"));
-		register(new CompatVersion("1_21_R1", "1.21", "229d7afc75b70a6c388337687ac4da1f"));
-		// Note: MC 1.20.6 completely replaced 1.20.5. We only support 1.20.6.
-		register(new CompatVersion("1_20_R5", "1.20.6", "ee13f98a43b9c5abffdcc0bb24154460"));
-	}
-
-	public static @Nullable CompatVersion getCompatVersion(String compatVersion) {
-		return COMPAT_VERSIONS.get(compatVersion); // Null if not found
-	}
-
-	/**
-	 * Searches for a matching {@link CompatVersion}.
-	 * 
-	 * @param mappingsVersion
-	 *            the mappings version
-	 * @param variant
-	 *            the variant, or an empty String
-	 * @return the matched {@link CompatVersion}, or <code>null</code> if not suited
-	 *         {@link CompatVersion} is found
-	 */
-	private static @Nullable CompatVersion findCompatVersion(String mappingsVersion, String variant) {
-		var compatVersion = COMPAT_VERSIONS.values().stream()
-				.filter(x -> x.getMappingsVersion().equals(mappingsVersion)
-						&& x.getVariant().equals(variant))
-				.findFirst()
-				.orElse(null);
-		if (compatVersion == null && !variant.isEmpty()) {
-			// Check again but also match compat versions without any variant:
-			// This allows us to reuse the older compatible compat version implementations for Paper
-			// servers without having to copy them.
-			compatVersion = COMPAT_VERSIONS.values().stream()
-					.filter(x -> x.getMappingsVersion().equals(mappingsVersion) && !x.hasVariant())
-					.findFirst()
-					.orElse(null);
-		}
-		return compatVersion;
-	}
-
-	// ----
 
 	private static @Nullable CompatProvider provider;
 
@@ -98,45 +22,30 @@ public final class Compat {
 		return Validate.State.notNull(provider, "Compat provider is not set up!");
 	}
 
-	// Returns true if the compat or fallback provider has been successfully set up.
+	/**
+	 * Loads the compatibility provider for Paper 1.21.11.
+	 * 
+	 * @param plugin
+	 *            the plugin instance
+	 * @return <code>true</code> if the provider was successfully loaded
+	 */
 	public static boolean load(Plugin plugin) {
 		if (provider != null) {
 			throw new IllegalStateException("Provider already loaded!");
 		}
 
-		var mappingsVersion = ServerUtils.getMappingsVersion();
-		var variant = ServerUtils.isPaper() ? CompatVersion.VARIANT_PAPER : "";
-
-		var compatVersion = findCompatVersion(mappingsVersion, variant);
-		if (compatVersion != null) {
-			String compatVersionString = compatVersion.getCompatVersion();
-			try {
-				Class<?> clazz = Class.forName(
-						"com.nisovin.shopkeepers.compat.v" + compatVersionString + ".CompatProviderImpl"
-				);
-				provider = (CompatProvider) clazz.getConstructor().newInstance();
-				Log.info("Compatibility provider loaded: " + compatVersionString);
-				return true; // Success
-			} catch (Exception e) {
-				Log.severe("Failed to load compatibility provider for version '"
-						+ compatVersionString + "'!", e);
-				// Continue with fallback.
-			}
-		}
-
-		// Incompatible server version detected:
-		Log.warning("Incompatible server version: " + Bukkit.getBukkitVersion() + " (mappings: "
-				+ mappingsVersion + ", variant: " + (variant.isEmpty() ? "default" : variant)
-				+ ")");
-		Log.warning("Shopkeepers is trying to run in 'fallback mode'.");
-		Log.info("Check for updates at: " + plugin.getDescription().getWebsite());
-
 		try {
-			provider = new FallbackCompatProvider();
+			// Directly load the 1.21.11 provider - no version detection needed
+			Class<?> clazz = Class.forName(
+					"com.nisovin.shopkeepers.compat.v1_21_11.CompatProviderImpl"
+			);
+			provider = (CompatProvider) clazz.getConstructor().newInstance();
+			Log.info("Compatibility provider loaded: 1_21_11");
 			return true; // Success
 		} catch (Exception e) {
-			Log.severe("Failed to enable 'fallback mode'!", e);
+			Log.severe("Failed to load compatibility provider for Paper 1.21.11!", e);
+			Log.severe("Shopkeepers requires Paper 1.21.11 or later.");
+			return false;
 		}
-		return false;
 	}
 }
