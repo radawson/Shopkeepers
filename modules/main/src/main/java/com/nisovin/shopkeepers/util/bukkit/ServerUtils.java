@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.UnsafeValues;
 
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
+import com.nisovin.shopkeepers.util.logging.Log;
 
 public final class ServerUtils {
 
@@ -23,22 +24,32 @@ public final class ServerUtils {
 		}
 		IS_PAPER = isPaper;
 
+		// Try to get mappings version - handle deprecated method gracefully
+		String mappingsVersion = "unknown";
 		UnsafeValues unsafeValues = Bukkit.getUnsafe();
-		Method getMappingsVersionMethod;
+		
+		// First, try the new Paper API (ServerBuildInfo#minecraftVersionId)
 		try {
-			getMappingsVersionMethod = unsafeValues.getClass().getDeclaredMethod("getMappingsVersion");
-		} catch (NoSuchMethodException | SecurityException e) {
-			throw new RuntimeException(
-					"Could not find method 'getMappingsVersion' in the UnsafeValues implementation!",
-					e
-			);
+			Class<?> serverBuildInfoClass = Class.forName("io.papermc.paper.ServerBuildInfo");
+			Method getInstanceMethod = serverBuildInfoClass.getMethod("getInstance");
+			Object serverBuildInfo = getInstanceMethod.invoke(null);
+			Method getMinecraftVersionIdMethod = serverBuildInfoClass.getMethod("minecraftVersionId");
+			mappingsVersion = Unsafe.cast(getMinecraftVersionIdMethod.invoke(serverBuildInfo));
+		} catch (Exception e) {
+			// New API not available, try old method
+			try {
+				Method getMappingsVersionMethod = unsafeValues.getClass().getDeclaredMethod("getMappingsVersion");
+				mappingsVersion = Unsafe.cast(getMappingsVersionMethod.invoke(unsafeValues));
+			} catch (NoSuchMethodException | SecurityException e2) {
+				// Method doesn't exist - use fallback
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e2) {
+				// Method exists but throws exception (e.g., UnsupportedOperationException)
+				// This is expected on newer Paper versions (1.21.10+) - method is deprecated
+				// Use fallback value "unknown"
+			}
 		}
-		try {
-			MAPPINGS_VERSION = Unsafe.cast(getMappingsVersionMethod.invoke(unsafeValues));
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new RuntimeException("Could not retrieve the server's mappings version!", e);
-		}
-
+		
+		MAPPINGS_VERSION = mappingsVersion;
 	}
 
 	/**
