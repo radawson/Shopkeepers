@@ -5,8 +5,20 @@
 Shopkeepers [![Build Status](https://github.com/Shopkeepers/Shopkeepers/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Shopkeepers/Shopkeepers/actions/workflows/build.yml)
 ===========
 
-Shopkeepers is a Bukkit/[Spigot](https://www.spigotmc.org/wiki/spigot/) plugin that allows you to set up custom villager shopkeepers that sell exactly what you want them to sell and for what price. 
+Shopkeepers is a Paper/Spigot plugin that allows you to set up custom villager shopkeepers that sell exactly what you want them to sell and for what price. 
 You can set up admin shops, which have infinite supply, and you can also set up player shops, which pull supply from a container.
+
+**Requirements:**
+- Paper/Spigot 1.21+ (Paper recommended)
+- Java 21 or later
+
+## Documentation
+
+Comprehensive documentation is available in the `docs/` folder:
+
+* **[Features Guide](docs/features.md)**: Detailed documentation of all Shopkeepers features
+* **[Configuration Guide](docs/configuration.md)**: Complete configuration reference
+* **[Usage Guide](docs/usage.md)**: User guide for commands, permissions, and common tasks
 
 **BukkitDev**: https://dev.bukkit.org/projects/shopkeepers  
 **Spigot**: https://www.spigotmc.org/resources/shopkeepers.80756/  
@@ -61,22 +73,58 @@ The API is still quite limited. For example, it is not yet possible to implement
 
 If you only want to check if a given entity is a shopkeeper, there is no need to hook into the Shopkeepers API: Every shopkeeper entity is tagged with the `'shopkeeper'` metadata, so you can check for that via `entity.hasMetadata("shopkeeper")`.
 
-Cloning and Building
-----------------
+## Installation
+
+### For Server Owners
+
+1. Download Shopkeepers from [Spigot](https://www.spigotmc.org/resources/shopkeepers.80756/) or [GitHub Releases](https://github.com/Shopkeepers/Shopkeepers/releases)
+2. Place the Shopkeepers jar file in your server's `plugins` folder
+3. Restart your server
+4. Configure Shopkeepers via `plugins/Shopkeepers/config.yml`
+5. See the [Configuration Guide](docs/configuration.md) for detailed setup instructions
+
+### Building from Source
 
 This section assumes that you have [Git](https://git-scm.com/) installed.
 
-We use Gradle to compile and build the plugin. This repository comes with Bash scripts to automatically install the required versions of Gradle and the Java SDK, build the required [Spigot](https://www.spigotmc.org/wiki/spigot/) dependencies, and then use Gradle to build Shopkeepers and produce a plugin, an API, and a 'main' jar. Unless you are a developer, you can ignore the latter two jars.
+We use Gradle to compile and build the plugin. This repository comes with Bash scripts to automatically install the required versions of Gradle and the Java SDK, build the required Paper/Spigot dependencies, and then use Gradle to build Shopkeepers.
 
-To build Shopkeepers, just execute the following commands from within a Bash console. If you are on Windows, you can install [Git-for-Windows](https://gitforwindows.org/) and then execute these commands from within the "Git Bash".
+**Requirements:**
+- Java 21 or later
+- Git
 
-```
+To build Shopkeepers, execute the following commands from within a Bash console. If you are on Windows, you can install [Git-for-Windows](https://gitforwindows.org/) and then execute these commands from within the "Git Bash".
+
+```bash
 git clone https://github.com/Shopkeepers/Shopkeepers.git
 cd Shopkeepers
 ./build.sh
 ```
 
-If everything went well, the `build` folder will contain a plugin jar that you can install on your server, as well as an API and 'main' jar that can be used to by other plugin developers to develop addons. The API jar contains the more stable but limited public API, whereas the 'main' jar contains the far less stable internal plugin code, excluding any server version specific code.
+Or using Gradle directly:
+
+```bash
+git clone https://github.com/Shopkeepers/Shopkeepers.git
+cd Shopkeepers
+./gradlew build
+```
+
+If everything went well, the `build` folder will contain:
+- **Plugin jar**: The main plugin file to install on your server
+- **API jar**: For plugin developers (more stable public API)
+- **Main jar**: Internal plugin code for developers (less stable)
+
+Unless you are a developer, you only need the plugin jar.
+
+## Recent Improvements
+
+Shopkeepers has been modernized with the following improvements:
+
+* **Paper API**: Migrated from deprecated Bukkit/Spigot APIs to modern Paper API
+* **Java 21+**: Updated to require Java 21 for better performance and modern language features
+* **ServiceIO Integration**: Enhanced support for ServiceIO (modern Vault replacement)
+* **Improved Architecture**: Better code organization and maintainability
+* **Enhanced Compatibility**: Better integration with protection plugins (WorldGuard, Towny, etc.)
 
 Pull Requests & Contributing
 ----------
@@ -93,6 +141,6 @@ Shopkeepers requires several Spigot and CraftBukkit dependencies. The easiest wa
 To build the project from within your IDE, refer to your IDE's respective documentation on how to build Gradle projects. For Eclipse, right-click the root project, select **Run As > Run configurations...**, and then set up a 'Gradle Task' run configuration that executes the intended Gradle build tasks.  
 Some shortcuts have been defined for commonly used combinations of build tasks. For example, 'cleanBuild' will trigger a clean build and runs all tests. 'cleanInstall' will additionally install the built jars into your local Maven repository.  
 
-Note that we require Java 16 to build.
+**Note:** We require Java 21 or later to build.
 
 For more information on creating pull requests and contributing code to the project see [Contributing](CONTRIBUTING.md).
