@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- Include, expand, and enhance doctrings
+- Do not remove comments unless they are no longer valid
+- Update README.md and CONFIG.md with any applicable additions or changes
+- Prefer Paper API calls over others
+- Remove and/or refactor any Spigot APi calls
+- If you are unable to edit a particular file like YAML, provide clear generated input with cutlines listing line numbers for insertion
+- When there are multiple functions, variables, or text keys we should keep them in order, except fopr getters and setters, which will be orderd by the variable they get or set.
+- Attempt to replace any deprecated funcxtions or variables that are identified in the linter.
+- Create Migrations for database initialization and any schema changes.

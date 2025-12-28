@@ -20,6 +20,7 @@ import com.nisovin.shopkeepers.util.data.persistence.DataStore;
 import com.nisovin.shopkeepers.util.data.persistence.bukkit.BukkitConfigDataStore;
 import com.nisovin.shopkeepers.util.java.Validate;
 import com.nisovin.shopkeepers.util.logging.Log;
+import org.bukkit.ChatColor;
 
 @WithDefaultValueType(fieldType = String.class, valueType = ColoredStringValue.class)
 @WithValueTypeProvider(ColoredStringListValue.Provider.class)
@@ -833,6 +834,17 @@ public class Messages extends Config {
 	public static Text commandDescriptionSnapshotRestore = Text.parse("Restores a specific shop snapshot.");
 	public static Text commandDescriptionEditVillager = Text.parse("Opens the editor for the target villager.");
 	public static Text commandDescriptionReplaceAllWithVanillaVillagers = Text.parse("Replaces all shopkeepers with vanilla villagers without AI.");
+
+	public static Text snapshotError = Text.color(ChatColor.RED).text("An error occurred while handling snapshots.");
+
+	// --- New keys for ambiguity handling ---
+	public static Text noShopkeepersFound = Text.color(ChatColor.RED).text("No shopkeepers found matching the criteria.");
+	public static Text cannotRemoveTargetedShops = Text.color(ChatColor.RED).text("Cannot remove any of the targeted shopkeepers (check permissions?).");
+	public static Text confirmRemoveMultipleShops = Text.color(ChatColor.GOLD).text("Ambiguous target. Found {count} shopkeepers you can remove: {list}.");
+	public static Text removedMultipleShops = Text.color(ChatColor.GREEN).text("Removed {success} shopkeepers. {fail} failed.");
+
+	// --- Editor messages ---
+	public static Text editorShopName = Text.color(ChatColor.YELLOW).text("Shop Type: {type}");
 
 	/////
 
