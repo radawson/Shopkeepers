@@ -10,7 +10,10 @@ import com.nisovin.shopkeepers.util.java.StringUtils;
 import net.milkbowl.vault.economy.Economy;
 
 /**
- * Checks whether and which Vault economy is available on the server.
+ * Checks whether and which economy is available on the server.
+ * 
+ * <p>Supports both ServiceIO (modern) and Vault (legacy) economy implementations.
+ * ServiceIO implements the Vault Economy interface for compatibility.
  */
 public class VaultEconomyChart extends Metrics.SimplePie {
 
@@ -18,7 +21,7 @@ public class VaultEconomyChart extends Metrics.SimplePie {
 
 	public VaultEconomyChart() {
 		super("vault_economy", () -> {
-			// Check if Vault's Economy class is present (independently of the Vault plugin itself):
+			// Check if Economy class is present (ServiceIO implements Vault Economy interface):
 			Class<?> economyClass = null;
 			try {
 				economyClass = Class.forName(ECONOMY_SERVICE_CLASS_NAME);
@@ -27,6 +30,7 @@ public class VaultEconomyChart extends Metrics.SimplePie {
 			String economyName = null;
 			if (economyClass != null) {
 				// Get the economy name, if an economy is present:
+				// Works with both ServiceIO and Vault implementations
 				RegisteredServiceProvider<Economy> registration = Bukkit.getServicesManager().getRegistration(Economy.class);
 				Economy economy = (registration != null) ? registration.getProvider() : null;
 				if (economy != null) {

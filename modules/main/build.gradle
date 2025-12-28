@@ -15,7 +15,9 @@ repositories {
 	maven { url = 'https://repo.codemc.org/repository/maven-public/' }
 	// Towny
 	maven { url = 'https://repo.glaremasters.me/repository/towny/' }
-	// Towny alternative (needs a different group id), VaultAPI
+	// ServiceIO (replaces Vault)
+	maven { url = 'https://repo.thenextlvl.net/releases' }
+	// Towny alternative (needs a different group id), legacy VaultAPI (for compatibility)
 	maven { url = 'https://jitpack.io' }
 }
 
@@ -42,7 +44,8 @@ dependencies {
 	compileOnly libs.worldguard.bukkit
 	compileOnly libs.towny
 	(compileOnly libs.citizens.main) { transitive = false }
-	compileOnly libs.vault.api
+	// ServiceIO (replaces Vault - implements Vault Economy interface for compatibility)
+	compileOnly libs.service.io
 	compileOnly libs.bstats.bukkit
 
 	shaded libs.bstats.bukkit
