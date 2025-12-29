@@ -378,3 +378,4 @@ See: https://github.com/Shopkeepers/Shopkeepers/tree/master/modules/api/src/main
 
 For configuration details, see the [Configuration Guide](configuration.md). For usage instructions, see the [Usage Guide](usage.md).
 
+

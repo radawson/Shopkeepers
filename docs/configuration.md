@@ -436,3 +436,4 @@ Most settings require a server restart. Some can be reloaded with `/shopkeeper r
 
 For more help, see the [Usage Guide](usage.md) or check GitHub Issues.
 
+
