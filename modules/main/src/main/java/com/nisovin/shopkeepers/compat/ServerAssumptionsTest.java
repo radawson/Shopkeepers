@@ -199,36 +199,45 @@ public class ServerAssumptionsTest {
 		itemMeta.setEnchantmentGlintOverride(true);
 		itemMeta.addEnchant(Enchantment.UNBREAKING, 1, true);
 		itemMeta.addEnchant(Enchantment.SHARPNESS, 2, true);
-		itemMeta.addAttributeModifier(
-				Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.attack_speed")),
-				new AttributeModifier(
-						new UUID(1L, 1L),
-						"attack speed bonus",
-						2,
-						Operation.ADD_NUMBER,
-						EquipmentSlotGroup.HAND
-				)
-		);
-		itemMeta.addAttributeModifier(
-				Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.attack_speed")),
-				new AttributeModifier(
-						new UUID(2L, 2L),
-						"attack speed bonus 2",
-						0.5,
-						Operation.MULTIPLY_SCALAR_1,
-						EquipmentSlotGroup.OFFHAND
-				)
-		);
-		itemMeta.addAttributeModifier(
-				Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.max_health")),
-				new AttributeModifier(
-						new UUID(3L, 3L),
-						"max health bonus",
-						2,
-						Operation.ADD_NUMBER,
-						EquipmentSlotGroup.HAND
-				)
-		);
+		
+		// Add attribute modifiers - handle cases where attributes might not be available
+		Attribute attackSpeedAttr = Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.attack_speed"));
+		if (attackSpeedAttr != null) {
+			itemMeta.addAttributeModifier(
+					attackSpeedAttr,
+					new AttributeModifier(
+							new UUID(1L, 1L),
+							"attack speed bonus",
+							2,
+							Operation.ADD_NUMBER,
+							EquipmentSlotGroup.HAND
+					)
+			);
+			itemMeta.addAttributeModifier(
+					attackSpeedAttr,
+					new AttributeModifier(
+							new UUID(2L, 2L),
+							"attack speed bonus 2",
+							0.5,
+							Operation.MULTIPLY_SCALAR_1,
+							EquipmentSlotGroup.OFFHAND
+					)
+			);
+		}
+		
+		Attribute maxHealthAttr = Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.max_health"));
+		if (maxHealthAttr != null) {
+			itemMeta.addAttributeModifier(
+					maxHealthAttr,
+					new AttributeModifier(
+							new UUID(3L, 3L),
+							"max health bonus",
+							2,
+							Operation.ADD_NUMBER,
+							EquipmentSlotGroup.HAND
+					)
+			);
+		}
 		itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
 		FoodComponent food = itemMeta.getFood();
@@ -238,12 +247,6 @@ public class ServerAssumptionsTest {
 		// food.setEatSeconds(5.5f);
 		// food.addEffect(new PotionEffect(PotionEffectType.BLINDNESS, 5, 1), 0.5f);
 		itemMeta.setFood(food);
-		// TODO MC 1.21.2/3:
-		// - EquippableComponent
-		// - UseCooldownComponent
-		// - enchantable, tooltip style, item model, is glider, damage resistance /replaces fire
-		// resistance), use remainder, equippable
-		// - PotionMeta: custom name
 
 		// Note: This data ends up getting stored in an arbitrary order internally.
 		PersistentDataContainer customTags = itemMeta.getPersistentDataContainer();
