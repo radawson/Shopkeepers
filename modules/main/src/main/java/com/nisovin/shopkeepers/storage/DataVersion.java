@@ -54,8 +54,11 @@ public final class DataVersion {
 	 * The current shopkeeper storage version.
 	 * <p>
 	 * Changes to this version trigger a full save of all shopkeepers.
+	 * <p>
+	 * Note: This was updated from 3 to 4 to support existing save files that were created
+	 * with a version of Shopkeepers that used storage version 4.
 	 */
-	private static final int SHOPKEEPER_STORAGE_VERSION = 3;
+	private static final int SHOPKEEPER_STORAGE_VERSION = 4;
 	/**
 	 * The current shopkeeper data version.
 	 * <p>
@@ -65,6 +68,7 @@ public final class DataVersion {
 	private static final int SHOPKEEPER_DATA_VERSION = 2;
 
 	private static @Nullable DataVersion current = null;
+	private static boolean initialized = false;
 
 	/**
 	 * Gets the current {@link DataVersion}.
@@ -82,7 +86,7 @@ public final class DataVersion {
 	 * This needs to be called early during plugin initialization.
 	 */
 	public static void init() {
-		if (current != null) return; // Already initialized
+		if (initialized) return; // Already initialized
 
 		// This call can fail and then (intentionally) cause the plugin initialization to fail:
 		current = new DataVersion(
@@ -90,11 +94,29 @@ public final class DataVersion {
 				SHOPKEEPER_DATA_VERSION,
 				getCurrentMinecraftDataVersion()
 		);
+		initialized = true;
 	}
 
 	private static int getCurrentMinecraftDataVersion() {
 		try {
-			return Bukkit.getUnsafe().getDataVersion();
+			// Try Paper API first (ServerBuildInfo#dataVersion)
+			try {
+				Class<?> serverBuildInfoClass = Class.forName("io.papermc.paper.ServerBuildInfo");
+				java.lang.reflect.Method getInstanceMethod = serverBuildInfoClass.getMethod("getInstance");
+				Object serverBuildInfo = getInstanceMethod.invoke(null);
+				java.lang.reflect.Method getDataVersionMethod = serverBuildInfoClass.getMethod("dataVersion");
+				Object dataVersion = getDataVersionMethod.invoke(serverBuildInfo);
+				if (dataVersion instanceof Integer) {
+					return ((Integer) dataVersion).intValue();
+				}
+			} catch (Exception e) {
+				// Paper API not available or failed, fall back to deprecated method
+			}
+			
+			// Fallback to deprecated Bukkit API (still functional, just deprecated)
+			@SuppressWarnings("deprecation")
+			org.bukkit.UnsafeValues unsafe = Bukkit.getUnsafe();
+			return unsafe.getDataVersion();
 		} catch (Exception e) {
 			// This case can for example be reached when the plugin runs on an unsupported type of
 			// server, or when this is called in an unsupported context, such as for example during
