@@ -1,5 +1,7 @@
 package com.nisovin.shopkeepers.shopobjects.living.types;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -11,7 +13,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
 import com.nisovin.shopkeepers.api.shopkeeper.ShopCreationData;
 import com.nisovin.shopkeepers.compat.Compat;
-import com.nisovin.shopkeepers.compat.MC_1_21_9;
 import com.nisovin.shopkeepers.lang.Messages;
 import com.nisovin.shopkeepers.shopkeeper.AbstractShopkeeper;
 import com.nisovin.shopkeepers.shopobjects.ShopObjectData;
@@ -29,10 +30,16 @@ import com.nisovin.shopkeepers.util.data.serialization.java.StringSerializers;
 import com.nisovin.shopkeepers.util.inventory.ItemUtils;
 import com.nisovin.shopkeepers.util.java.CollectionUtils;
 
-// TODO Use the actual entity type once we only support 1.21.9+
 public class CopperGolemShop extends SKLivingShopObject<Golem> {
 
-	// TODO Use the actual enum type once we only support 1.21.9+
+	/**
+	 * Available weather states for copper golems.
+	 * Paper 1.21.11+ supports copper golems.
+	 */
+	private static final List<String> COPPER_GOLEM_WEATHER_STATES = Collections.unmodifiableList(
+			Arrays.asList("UNAFFECTED", "EXPOSED", "WEATHERED", "OXIDIZED")
+	);
+
 	public static final Property<String> WEATHER_STATE = new BasicProperty<String>()
 			.dataKeyAccessor("weatherState", StringSerializers.STRICT_NON_EMPTY)
 			.useDefaultIfMissing()
@@ -89,7 +96,7 @@ public class CopperGolemShop extends SKLivingShopObject<Golem> {
 
 	public void cycleWeatherState(boolean backwards) {
 		this.setWeatherState(CollectionUtils.cycleValue(
-				MC_1_21_9.COPPER_GOLEM_WEATHER_STATES,
+				COPPER_GOLEM_WEATHER_STATES,
 				this.getWeatherState(),
 				backwards
 		));
