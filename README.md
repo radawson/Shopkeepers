@@ -5,11 +5,13 @@
 Shopkeepers [![Build Status](https://github.com/Shopkeepers/Shopkeepers/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Shopkeepers/Shopkeepers/actions/workflows/build.yml)
 ===========
 
-Shopkeepers is a Paper/Spigot plugin that allows you to set up custom villager shopkeepers that sell exactly what you want them to sell and for what price. 
+Shopkeepers is a Paper plugin that allows you to set up custom villager shopkeepers that sell exactly what you want them to sell and for what price.
 You can set up admin shops, which have infinite supply, and you can also set up player shops, which pull supply from a container.
 
+**Note:** This is the Paper-only branch. For Spigot support, use the legacy Spigot branch.
+
 **Requirements:**
-- Paper/Spigot 1.21+ (Paper recommended)
+- Paper 1.21.11 or later
 - Java 21 or later
 
 ## Documentation
@@ -20,6 +22,8 @@ Comprehensive documentation is available in the `docs/` folder:
 * **[Configuration Guide](docs/configuration.md)**: Complete configuration reference
 * **[Usage Guide](docs/usage.md)**: User guide for commands, permissions, and common tasks
 * **[Debugging Guide](docs/DEBUGGING.md)**: Developer guide for debugging and troubleshooting
+* **[Project Map](docs/PROJECT_MAP.md)**: Project structure and module overview
+* **[Update Checklist](docs/Update-Checklist.md)**: Guide for updating to new Paper/Minecraft versions
 
 **BukkitDev**: https://dev.bukkit.org/projects/shopkeepers  
 **Spigot**: https://www.spigotmc.org/resources/shopkeepers.80756/  
@@ -78,17 +82,19 @@ If you only want to check if a given entity is a shopkeeper, there is no need to
 
 ### For Server Owners
 
-1. Download Shopkeepers from [Spigot](https://www.spigotmc.org/resources/shopkeepers.80756/) or [GitHub Releases](https://github.com/Shopkeepers/Shopkeepers/releases)
+1. Download Shopkeepers from [GitHub Releases](https://github.com/Shopkeepers/Shopkeepers/releases) (Paper branch)
 2. Place the Shopkeepers jar file in your server's `plugins` folder
 3. Restart your server
 4. Configure Shopkeepers via `plugins/Shopkeepers/config.yml`
 5. See the [Configuration Guide](docs/configuration.md) for detailed setup instructions
 
+**Important:** This version requires Paper 1.21.11 or later. It will not work on Spigot servers.
+
 ### Building from Source
 
 This section assumes that you have [Git](https://git-scm.com/) installed.
 
-We use Gradle to compile and build the plugin. This repository comes with Bash scripts to automatically install the required versions of Gradle and the Java SDK, build the required Paper/Spigot dependencies, and then use Gradle to build Shopkeepers.
+We use Gradle to compile and build the plugin. This repository uses Paperweight to automatically download and configure Paper dependencies. The build process uses Gradle to compile Shopkeepers against the Paper API.
 
 **Requirements:**
 - Java 21 or later
@@ -121,11 +127,14 @@ Unless you are a developer, you only need the plugin jar.
 
 Shopkeepers has been modernized with the following improvements:
 
+* **Paper-Only**: This branch is built exclusively for Paper servers, providing better performance and access to Paper-specific features
 * **Paper API**: Migrated from deprecated Bukkit/Spigot APIs to modern Paper API
+* **Mojang Mappings**: Uses Mojang mappings instead of Spigot mappings for better compatibility and faster updates
 * **Java 21+**: Updated to require Java 21 for better performance and modern language features
 * **ServiceIO Integration**: Enhanced support for ServiceIO (modern Vault replacement)
 * **Improved Architecture**: Better code organization and maintainability
 * **Enhanced Compatibility**: Better integration with protection plugins (WorldGuard, Towny, etc.)
+* **Semantic Versioning**: Adopted standard SemVer (Major.Minor.Patch) versioning scheme
 
 Pull Requests & Contributing
 ----------
@@ -135,9 +144,9 @@ To import the project into your favorite Java IDE, refer to your IDE's respectiv
 The root project contains several module projects. The most important ones are:
 * `main`: This contains the core plugin code.
 * `api`: This contains all API code.
-* And several modules for the NMS / CraftBukkit version specific code of the supported server versions.
+* `v1_21_11`: This contains the Paper/Mojang mappings version-specific code for Paper 1.21.11+.
 
-Shopkeepers requires several Spigot and CraftBukkit dependencies. The easiest way to automatically build and install these dependencies into your local Maven repository is to run the included `./scripts/installSpigotDependencies.sh` script.
+Shopkeepers uses Paperweight to automatically download and configure Paper dependencies. No manual dependency installation is required - Gradle will handle everything when you run `./gradlew build`.
 
 To build the project from within your IDE, refer to your IDE's respective documentation on how to build Gradle projects. For Eclipse, right-click the root project, select **Run As > Run configurations...**, and then set up a 'Gradle Task' run configuration that executes the intended Gradle build tasks.  
 Some shortcuts have been defined for commonly used combinations of build tasks. For example, 'cleanBuild' will trigger a clean build and runs all tests. 'cleanInstall' will additionally install the built jars into your local Maven repository.  
