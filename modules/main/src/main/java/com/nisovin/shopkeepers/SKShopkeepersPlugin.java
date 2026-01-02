@@ -26,7 +26,6 @@ import com.nisovin.shopkeepers.api.shopkeeper.ShopType;
 import com.nisovin.shopkeepers.commands.Commands;
 import com.nisovin.shopkeepers.compat.Compat;
 import com.nisovin.shopkeepers.compat.MC_1_21_11;
-import com.nisovin.shopkeepers.compat.MC_1_21_9;
 import com.nisovin.shopkeepers.compat.ServerAssumptionsTest;
 import com.nisovin.shopkeepers.config.Settings;
 import com.nisovin.shopkeepers.config.lib.ConfigLoadException;
@@ -320,18 +319,12 @@ public class SKShopkeepersPlugin extends JavaPlugin implements InternalShopkeepe
 		}
 
 		// Check for and initialize version dependent utilities:
-		// Example: MC_1_20_6.init();
-<<<<<<< HEAD
-		// MC_1_21_3 and MC_1_21_4 features are always available in 1.21.11+
-=======
-		MC_1_21_9.init();
 		MC_1_21_11.init();
->>>>>>> upstream/master
 
 		// Compat module:
 		Compat.getProvider().onEnable();
 
-		// Paper includes Spigot API, so all features are available
+		// Paper-only build - all Paper API features are available
 
 		// Test server assumptions:
 		if (!ServerAssumptionsTest.run()) {

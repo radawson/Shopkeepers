@@ -33,8 +33,7 @@ import com.nisovin.shopkeepers.util.inventory.ItemUtils;
 import com.nisovin.shopkeepers.util.java.Validate;
 import com.nisovin.shopkeepers.util.logging.Log;
 
-// This assumes Spigot mappings. Fallback for server implementations with other mappings (e.g.
-// Paper) is not supported currently.
+// Fallback compatibility provider for Paper 1.21.5-1.21.10 (deprecated - will be removed in future versions).
 public final class FallbackCompatProvider implements CompatProvider {
 
 	public static final String VERSION_ID = "fallback";
@@ -199,9 +198,7 @@ public final class FallbackCompatProvider implements CompatProvider {
 
 		// Bukkit
 
-		// Only supported on Spigot:
-		// Note: We use reflection here instead of calling the Spigot API directly, since this would
-		// break our Paper-API compilation check.
+		// Note: We use reflection here for compatibility with Paper API.
 		@Nullable Method localInventoryViewBuilderTitleMethod = null;
 		try {
 			localInventoryViewBuilderTitleMethod = InventoryViewBuilder.class.getMethod("title", String.class);
@@ -308,7 +305,7 @@ public final class FallbackCompatProvider implements CompatProvider {
 
 	@Override
 	public void setInventoryViewTitle(InventoryViewBuilder<?> builder, String title) {
-		// Only supported on Spigot:
+		// Paper API compatibility:
 		if (inventoryViewBuilderTitleMethod == null) {
 			return;
 		}

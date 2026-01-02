@@ -27,7 +27,7 @@ configurations {
 }
 
 dependencies {
-    // Paper dev bundle includes Paper API (which replaces Spigot API)
+    // Paper dev bundle (Paper-only build)
     paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
     
     // Eclipse JDT annotations (for null analysis)
