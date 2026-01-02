@@ -23,12 +23,16 @@ public class SKShopkeepersBootstrap implements PluginBootstrap {
 
 	@Override
 	public void bootstrap(@NonNull BootstrapContext context) {
-		// Set up logger early
-		Log.setLogger(context.getLogger());
-
 		// Note: Plugin instance is not yet available during bootstrap.
 		// Early initialization that doesn't require the plugin instance happens here.
 		// Most initialization will happen in onLoad() after the plugin instance is created.
+		//
+		// Logger initialization: The logger is set up in onLoad() when the plugin instance
+		// is available. The BootstrapContext provides a ComponentLogger, but we use the
+		// plugin instance's getLogger() in onLoad() for consistency and compatibility.
+		// If early logging is needed during bootstrap, Log.setLoggerFromComponentLogger()
+		// could be used here with context.getLogger(), but it's not necessary for the
+		// current bootstrap implementation.
 	}
 
 	@Override

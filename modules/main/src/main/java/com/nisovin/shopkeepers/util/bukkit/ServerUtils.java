@@ -56,7 +56,7 @@ private static String findMappingsVersion() {
 		try {
 			Method getMappingsVersionMethod = unsafeValues.getClass().getDeclaredMethod("getMappingsVersion");
 			return Unsafe.cast(getMappingsVersionMethod.invoke(unsafeValues));
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e2) {
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e2) {
 			throw new RuntimeException("Could not retrieve the server's mappings version!", e2);
 		}
 	}

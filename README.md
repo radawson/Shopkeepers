@@ -19,6 +19,7 @@ Comprehensive documentation is available in the `docs/` folder:
 * **[Features Guide](docs/features.md)**: Detailed documentation of all Shopkeepers features
 * **[Configuration Guide](docs/configuration.md)**: Complete configuration reference
 * **[Usage Guide](docs/usage.md)**: User guide for commands, permissions, and common tasks
+* **[Debugging Guide](docs/DEBUGGING.md)**: Developer guide for debugging and troubleshooting
 
 **BukkitDev**: https://dev.bukkit.org/projects/shopkeepers  
 **Spigot**: https://www.spigotmc.org/resources/shopkeepers.80756/  
