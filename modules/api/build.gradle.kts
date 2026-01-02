@@ -38,6 +38,11 @@ tasks.named<Jar>("javadocJar") {
 	configureJarTask(project, this)
 }
 
+check {
+	// Test compilation against Paper API:
+	dependsOn compileWithPaper
+}
+
 // Copies the project's jars into the build folder of the root project.
 tasks.register<Copy>("copyResults") {
 	from(tasks.named("jar"))

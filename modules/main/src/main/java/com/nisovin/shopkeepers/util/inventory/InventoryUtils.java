@@ -652,6 +652,7 @@ public final class InventoryUtils {
 	}
 
 	public static void closeInventoryDelayed(Player player) {
+		// Cast to Runnable to resolve ambiguity error when compiling against Paper-API:
 		Bukkit.getScheduler().runTask(ShopkeepersPlugin.getInstance(), (Runnable) player::closeInventory);
 	}
 

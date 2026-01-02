@@ -13,11 +13,11 @@ import com.nisovin.shopkeepers.api.shopkeeper.ShopCreationData;
 import com.nisovin.shopkeepers.lang.Messages;
 import com.nisovin.shopkeepers.shopkeeper.AbstractShopkeeper;
 import com.nisovin.shopkeepers.shopobjects.ShopObjectData;
-import com.nisovin.shopkeepers.shopobjects.living.LivingShops;
+import com.nisovin.shopkeepers.shopobjects.entity.base.BaseEntityShopObjectCreationContext;
+import com.nisovin.shopkeepers.shopobjects.entity.base.BaseEntityShopObjectType;
 import com.nisovin.shopkeepers.shopobjects.living.SKLivingShopObject;
-import com.nisovin.shopkeepers.shopobjects.living.SKLivingShopObjectType;
 import com.nisovin.shopkeepers.ui.editor.Button;
-import com.nisovin.shopkeepers.ui.editor.EditorSession;
+import com.nisovin.shopkeepers.ui.editor.EditorView;
 import com.nisovin.shopkeepers.ui.editor.ShopkeeperActionButton;
 import com.nisovin.shopkeepers.util.data.property.BasicProperty;
 import com.nisovin.shopkeepers.util.data.property.Property;
@@ -31,6 +31,7 @@ public class SalmonShop extends SKLivingShopObject<Salmon> {
 
 	public static final Property<Salmon.Variant> VARIANT = new BasicProperty<Salmon.Variant>()
 			.dataKeyAccessor("variant", EnumSerializers.lenient(Salmon.Variant.class))
+			.useDefaultIfMissing()
 			.defaultValue(Salmon.Variant.MEDIUM)
 			.build();
 
@@ -39,12 +40,12 @@ public class SalmonShop extends SKLivingShopObject<Salmon> {
 			.build(properties);
 
 	public SalmonShop(
-			LivingShops livingShops,
-			SKLivingShopObjectType<SalmonShop> livingObjectType,
+			BaseEntityShopObjectCreationContext context,
+			BaseEntityShopObjectType<SalmonShop> shopObjectType,
 			AbstractShopkeeper shopkeeper,
 			@Nullable ShopCreationData creationData
 	) {
-		super(livingShops, livingObjectType, shopkeeper, creationData);
+		super(context, shopObjectType, shopkeeper, creationData);
 	}
 
 	@Override
@@ -68,7 +69,6 @@ public class SalmonShop extends SKLivingShopObject<Salmon> {
 	@Override
 	public List<Button> createEditorButtons() {
 		List<Button> editorButtons = super.createEditorButtons();
-		// Salmon variants are always available in 1.21.11+
 		editorButtons.add(this.getVariantEditorButton());
 		return editorButtons;
 	}
@@ -84,9 +84,11 @@ public class SalmonShop extends SKLivingShopObject<Salmon> {
 	}
 
 	public void cycleVariant(boolean backwards) {
-		this.setVariant(
-				EnumUtils.cycleEnumConstant(Salmon.Variant.class, this.getVariant(), backwards)
-		);
+		this.setVariant(EnumUtils.cycleEnumConstant(
+				Salmon.Variant.class,
+				this.getVariant(),
+				backwards
+		));
 	}
 
 	private void applyVariant() {
@@ -109,15 +111,12 @@ public class SalmonShop extends SKLivingShopObject<Salmon> {
 	private Button getVariantEditorButton() {
 		return new ShopkeeperActionButton() {
 			@Override
-			public @Nullable ItemStack getIcon(EditorSession editorSession) {
+			public @Nullable ItemStack getIcon(EditorView editorView) {
 				return getVariantEditorItem();
 			}
 
 			@Override
-			protected boolean runAction(
-					EditorSession editorSession,
-					InventoryClickEvent clickEvent
-			) {
+			protected boolean runAction(EditorView editorView, InventoryClickEvent clickEvent) {
 				boolean backwards = clickEvent.isRightClick();
 				cycleVariant(backwards);
 				return true;

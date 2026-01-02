@@ -1,11 +1,11 @@
 package com.nisovin.shopkeepers.shopobjects.living.types;
 
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.Registry;
 import org.bukkit.entity.Cat;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,10 +16,10 @@ import com.nisovin.shopkeepers.api.shopkeeper.ShopCreationData;
 import com.nisovin.shopkeepers.lang.Messages;
 import com.nisovin.shopkeepers.shopkeeper.AbstractShopkeeper;
 import com.nisovin.shopkeepers.shopobjects.ShopObjectData;
-import com.nisovin.shopkeepers.shopobjects.living.LivingShops;
-import com.nisovin.shopkeepers.shopobjects.living.SKLivingShopObjectType;
+import com.nisovin.shopkeepers.shopobjects.entity.base.BaseEntityShopObjectCreationContext;
+import com.nisovin.shopkeepers.shopobjects.entity.base.BaseEntityShopObjectType;
 import com.nisovin.shopkeepers.ui.editor.Button;
-import com.nisovin.shopkeepers.ui.editor.EditorSession;
+import com.nisovin.shopkeepers.ui.editor.EditorView;
 import com.nisovin.shopkeepers.ui.editor.ShopkeeperActionButton;
 import com.nisovin.shopkeepers.util.bukkit.RegistryUtils;
 import com.nisovin.shopkeepers.util.data.property.BasicProperty;
@@ -34,7 +34,7 @@ import com.nisovin.shopkeepers.util.java.EnumUtils;
 public class CatShop extends SittableShop<Cat> {
 
 	public static final Property<Cat.Type> CAT_TYPE = new BasicProperty<Cat.Type>()
-			.dataKeyAccessor("catType", KeyedSerializers.forRegistry(Cat.Type.class, Registry.CAT_VARIANT))
+			.dataKeyAccessor("catType", KeyedSerializers.forRegistry(Cat.Type.class))
 			.defaultValue(Cat.Type.TABBY)
 			.build();
 
@@ -52,12 +52,12 @@ public class CatShop extends SittableShop<Cat> {
 			.build(properties);
 
 	public CatShop(
-			LivingShops livingShops,
-			SKLivingShopObjectType<CatShop> livingObjectType,
+			BaseEntityShopObjectCreationContext context,
+			BaseEntityShopObjectType<CatShop> shopObjectType,
 			AbstractShopkeeper shopkeeper,
 			@Nullable ShopCreationData creationData
 	) {
-		super(livingShops, livingObjectType, shopkeeper, creationData);
+		super(context, shopObjectType, shopkeeper, creationData);
 	}
 
 	@Override
@@ -100,11 +100,7 @@ public class CatShop extends SittableShop<Cat> {
 	}
 
 	public void cycleCatType(boolean backwards) {
-		this.setCatType(RegistryUtils.cycleKeyed(
-				Registry.CAT_VARIANT,
-				this.getCatType(),
-				backwards
-		));
+		this.setCatType(RegistryUtils.cycleKeyed(Cat.Type.class, this.getCatType(), backwards));
 	}
 
 	private void applyCatType() {
@@ -114,35 +110,25 @@ public class CatShop extends SittableShop<Cat> {
 		entity.setCatType(this.getCatType());
 	}
 
+	private static final Map<Cat.Type, Color> CAT_TYPE_EDITOR_ITEM_COLORS = Map.ofEntries(
+			Map.entry(Cat.Type.TABBY, Color.BLACK.mixColors(Color.ORANGE)),
+			Map.entry(Cat.Type.ALL_BLACK, Color.BLACK),
+			Map.entry(Cat.Type.BLACK, Color.BLACK.mixDyes(DyeColor.GRAY)),
+			Map.entry(Cat.Type.BRITISH_SHORTHAIR, Color.SILVER),
+			Map.entry(Cat.Type.CALICO, Color.ORANGE.mixDyes(DyeColor.BROWN)),
+			Map.entry(Cat.Type.JELLIE, Color.GRAY),
+			Map.entry(Cat.Type.PERSIAN, Color.WHITE.mixDyes(DyeColor.ORANGE)),
+			Map.entry(Cat.Type.RAGDOLL, Color.WHITE.mixDyes(DyeColor.BROWN)),
+			Map.entry(Cat.Type.RED, Color.ORANGE),
+			Map.entry(Cat.Type.SIAMESE, Color.GRAY.mixDyes(DyeColor.BROWN)),
+			Map.entry(Cat.Type.WHITE, Color.WHITE)
+	);
+
 	private ItemStack getCatTypeEditorItem() {
+		var catType = this.getCatType();
 		ItemStack iconItem = new ItemStack(Material.LEATHER_CHESTPLATE);
-		String key = this.getCatType().getKey().getKey();
-		if (key.equals("tabby")) {
-			ItemUtils.setLeatherColor(iconItem, Color.BLACK.mixColors(Color.ORANGE));
-		} else if (key.equals("all_black")) {
-			ItemUtils.setLeatherColor(iconItem, Color.BLACK);
-		} else if (key.equals("black")) {
-			ItemUtils.setLeatherColor(iconItem, Color.BLACK.mixDyes(DyeColor.GRAY));
-		} else if (key.equals("british_shorthair")) {
-			ItemUtils.setLeatherColor(iconItem, Color.SILVER);
-		} else if (key.equals("calico")) {
-			ItemUtils.setLeatherColor(iconItem, Color.ORANGE.mixDyes(DyeColor.BROWN));
-		} else if (key.equals("jellie")) {
-			ItemUtils.setLeatherColor(iconItem, Color.GRAY);
-		} else if (key.equals("persian")) {
-			ItemUtils.setLeatherColor(iconItem, Color.WHITE.mixDyes(DyeColor.ORANGE));
-		} else if (key.equals("ragdoll")) {
-			ItemUtils.setLeatherColor(iconItem, Color.WHITE.mixDyes(DyeColor.BROWN));
-		} else if (key.equals("red")) {
-			ItemUtils.setLeatherColor(iconItem, Color.ORANGE);
-		} else if (key.equals("siamese")) {
-			ItemUtils.setLeatherColor(iconItem, Color.GRAY.mixDyes(DyeColor.BROWN));
-		} else if (key.equals("white")) {
-			ItemUtils.setLeatherColor(iconItem, Color.WHITE);
-		} else {
-			// Unknown type:
-			ItemUtils.setLeatherColor(iconItem, Color.PURPLE);
-		}
+		var color = CAT_TYPE_EDITOR_ITEM_COLORS.getOrDefault(catType, Color.PURPLE);
+		ItemUtils.setLeatherColor(iconItem, color);
 		ItemUtils.setDisplayNameAndLore(iconItem,
 				Messages.buttonCatVariant,
 				Messages.buttonCatVariantLore
@@ -153,15 +139,12 @@ public class CatShop extends SittableShop<Cat> {
 	private Button getCatTypeEditorButton() {
 		return new ShopkeeperActionButton() {
 			@Override
-			public @Nullable ItemStack getIcon(EditorSession editorSession) {
+			public @Nullable ItemStack getIcon(EditorView editorView) {
 				return getCatTypeEditorItem();
 			}
 
 			@Override
-			protected boolean runAction(
-					EditorSession editorSession,
-					InventoryClickEvent clickEvent
-			) {
+			protected boolean runAction(EditorView editorView, InventoryClickEvent clickEvent) {
 				boolean backwards = clickEvent.isRightClick();
 				cycleCatType(backwards);
 				return true;
@@ -221,15 +204,12 @@ public class CatShop extends SittableShop<Cat> {
 	private Button getCollarColorEditorButton() {
 		return new ShopkeeperActionButton() {
 			@Override
-			public @Nullable ItemStack getIcon(EditorSession editorSession) {
+			public @Nullable ItemStack getIcon(EditorView editorView) {
 				return getCollarColorEditorItem();
 			}
 
 			@Override
-			protected boolean runAction(
-					EditorSession editorSession,
-					InventoryClickEvent clickEvent
-			) {
+			protected boolean runAction(EditorView editorView, InventoryClickEvent clickEvent) {
 				boolean backwards = clickEvent.isRightClick();
 				cycleCollarColor(backwards);
 				return true;

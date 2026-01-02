@@ -2,10 +2,7 @@ package com.nisovin.shopkeepers.shopobjects.living.types;
 
 import java.util.List;
 
-import org.bukkit.Color;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.Registry;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,14 +16,14 @@ import com.nisovin.shopkeepers.config.Settings;
 import com.nisovin.shopkeepers.lang.Messages;
 import com.nisovin.shopkeepers.shopkeeper.AbstractShopkeeper;
 import com.nisovin.shopkeepers.shopobjects.ShopObjectData;
-import com.nisovin.shopkeepers.shopobjects.living.LivingShops;
-import com.nisovin.shopkeepers.shopobjects.living.SKLivingShopObjectType;
+import com.nisovin.shopkeepers.shopobjects.entity.base.BaseEntityShopObjectCreationContext;
+import com.nisovin.shopkeepers.shopobjects.entity.base.BaseEntityShopObjectType;
+import com.nisovin.shopkeepers.shopobjects.living.types.villager.VillagerEditorItems;
 import com.nisovin.shopkeepers.shopobjects.living.types.villager.VillagerSounds;
-import com.nisovin.shopkeepers.ui.UIHandler;
 import com.nisovin.shopkeepers.ui.editor.Button;
-import com.nisovin.shopkeepers.ui.editor.EditorSession;
+import com.nisovin.shopkeepers.ui.editor.EditorView;
 import com.nisovin.shopkeepers.ui.editor.ShopkeeperActionButton;
-import com.nisovin.shopkeepers.ui.trading.TradingHandler;
+import com.nisovin.shopkeepers.ui.trading.TradingViewProvider;
 import com.nisovin.shopkeepers.util.bukkit.RegistryUtils;
 import com.nisovin.shopkeepers.util.data.property.BasicProperty;
 import com.nisovin.shopkeepers.util.data.property.Property;
@@ -41,12 +38,12 @@ import com.nisovin.shopkeepers.util.java.MathUtils;
 public class VillagerShop extends BabyableShop<Villager> {
 
 	public static final Property<Profession> PROFESSION = new BasicProperty<Profession>()
-			.dataKeyAccessor("profession", KeyedSerializers.forRegistry(Profession.class, Registry.VILLAGER_PROFESSION))
+			.dataKeyAccessor("profession", KeyedSerializers.forRegistry(Profession.class))
 			.defaultValue(Profession.NONE)
 			.build();
 
 	public static final Property<Villager.Type> VILLAGER_TYPE = new BasicProperty<Villager.Type>()
-			.dataKeyAccessor("villagerType", KeyedSerializers.forRegistry(Villager.Type.class, Registry.VILLAGER_TYPE))
+			.dataKeyAccessor("villagerType", KeyedSerializers.forRegistry(Villager.Type.class))
 			.defaultValue(Villager.Type.PLAINS)
 			.build();
 
@@ -71,12 +68,12 @@ public class VillagerShop extends BabyableShop<Villager> {
 	private final VillagerSounds villagerSounds;
 
 	public VillagerShop(
-			LivingShops livingShops,
-			SKLivingShopObjectType<VillagerShop> livingObjectType,
+			BaseEntityShopObjectCreationContext context,
+			BaseEntityShopObjectType<VillagerShop> shopObjectType,
 			AbstractShopkeeper shopkeeper,
 			@Nullable ShopCreationData creationData
 	) {
-		super(livingShops, livingObjectType, shopkeeper, creationData);
+		super(context, shopObjectType, shopkeeper, creationData);
 		villagerSounds = new VillagerSounds(Unsafe.initialized(this));
 	}
 
@@ -101,10 +98,9 @@ public class VillagerShop extends BabyableShop<Villager> {
 		super.setup();
 
 		if (Settings.simulateVillagerTradingSounds) {
-			UIHandler tradingUIHandler = shopkeeper.getUIHandler(DefaultUITypes.TRADING());
-			if (tradingUIHandler instanceof TradingHandler) {
-				TradingHandler tradingHandler = (TradingHandler) tradingUIHandler;
-				tradingHandler.addListener(villagerSounds);
+			var viewProvider = shopkeeper.getViewProvider(DefaultUITypes.TRADING());
+			if (viewProvider instanceof TradingViewProvider tradingViewProvider) {
+				tradingViewProvider.addListener(villagerSounds);
 			}
 		}
 	}
@@ -162,7 +158,7 @@ public class VillagerShop extends BabyableShop<Villager> {
 
 	public void cycleProfession(boolean backwards) {
 		this.setProfession(RegistryUtils.cycleKeyed(
-				Registry.VILLAGER_PROFESSION,
+				Villager.Profession.class,
 				this.getProfession(),
 				backwards
 		));
@@ -176,42 +172,7 @@ public class VillagerShop extends BabyableShop<Villager> {
 	}
 
 	private ItemStack getProfessionEditorItem() {
-		ItemStack iconItem;
-		String key = this.getProfession().getKey().getKey();
-		if (key.equals("armorer")) {
-			iconItem = new ItemStack(Material.BLAST_FURNACE);
-		} else if (key.equals("butcher")) {
-			iconItem = new ItemStack(Material.SMOKER);
-		} else if (key.equals("cartographer")) {
-			iconItem = new ItemStack(Material.CARTOGRAPHY_TABLE);
-		} else if (key.equals("cleric")) {
-			iconItem = new ItemStack(Material.BREWING_STAND);
-		} else if (key.equals("farmer")) {
-			iconItem = new ItemStack(Material.WHEAT); // Instead of COMPOSTER
-		} else if (key.equals("fisherman")) {
-			iconItem = new ItemStack(Material.FISHING_ROD); // Instead of BARREL
-		} else if (key.equals("fletcher")) {
-			iconItem = new ItemStack(Material.FLETCHING_TABLE);
-		} else if (key.equals("leatherworker")) {
-			iconItem = new ItemStack(Material.LEATHER); // Instead of CAULDRON
-		} else if (key.equals("librarian")) {
-			iconItem = new ItemStack(Material.LECTERN);
-		} else if (key.equals("mason")) {
-			iconItem = new ItemStack(Material.STONECUTTER);
-		} else if (key.equals("shepherd")) {
-			iconItem = new ItemStack(Material.LOOM);
-		} else if (key.equals("toolsmith")) {
-			iconItem = new ItemStack(Material.SMITHING_TABLE);
-		} else if (key.equals("weaponsmith")) {
-			iconItem = new ItemStack(Material.GRINDSTONE);
-		} else if (key.equals("nitwit")) {
-			iconItem = new ItemStack(Material.LEATHER_CHESTPLATE);
-			ItemUtils.setLeatherColor(iconItem, Color.GREEN);
-		} else {
-			// NONE or unknown
-			iconItem = new ItemStack(Material.BARRIER);
-		}
-		assert iconItem != null;
+		var iconItem = VillagerEditorItems.getProfessionEditorItem(this.getProfession());
 		ItemUtils.setDisplayNameAndLore(
 				iconItem,
 				Messages.buttonVillagerProfession,
@@ -223,15 +184,12 @@ public class VillagerShop extends BabyableShop<Villager> {
 	private Button getProfessionEditorButton() {
 		return new ShopkeeperActionButton() {
 			@Override
-			public @Nullable ItemStack getIcon(EditorSession editorSession) {
+			public @Nullable ItemStack getIcon(EditorView editorView) {
 				return getProfessionEditorItem();
 			}
 
 			@Override
-			protected boolean runAction(
-					EditorSession editorSession,
-					InventoryClickEvent clickEvent
-			) {
+			protected boolean runAction(EditorView editorView, InventoryClickEvent clickEvent) {
 				boolean backwards = clickEvent.isRightClick();
 				cycleProfession(backwards);
 				return true;
@@ -251,7 +209,7 @@ public class VillagerShop extends BabyableShop<Villager> {
 
 	public void cycleVillagerType(boolean backwards) {
 		this.setVillagerType(RegistryUtils.cycleKeyed(
-				Registry.VILLAGER_TYPE,
+				Villager.Type.class,
 				this.getVillagerType(),
 				backwards
 		));
@@ -265,22 +223,7 @@ public class VillagerShop extends BabyableShop<Villager> {
 	}
 
 	private ItemStack getVillagerTypeEditorItem() {
-		ItemStack iconItem = new ItemStack(Material.LEATHER_CHESTPLATE);
-		String key = this.getVillagerType().getKey().getKey();
-		if (key.equals("desert")) {
-			ItemUtils.setLeatherColor(iconItem, Color.ORANGE);
-		} else if (key.equals("jungle")) {
-			ItemUtils.setLeatherColor(iconItem, Color.YELLOW.mixColors(Color.ORANGE));
-		} else if (key.equals("savanna")) {
-			ItemUtils.setLeatherColor(iconItem, Color.RED);
-		} else if (key.equals("snow")) {
-			ItemUtils.setLeatherColor(iconItem, DyeColor.CYAN.getColor());
-		} else if (key.equals("swamp")) {
-			ItemUtils.setLeatherColor(iconItem, DyeColor.PURPLE.getColor());
-		} else if (key.equals("taiga")) {
-			ItemUtils.setLeatherColor(iconItem, Color.WHITE.mixDyes(DyeColor.BROWN));
-		}
-		// Default (plains) or unknown: keep default brown color
+		var iconItem = VillagerEditorItems.getVillagerTypeEditorItem(this.getVillagerType());
 		ItemUtils.setDisplayNameAndLore(
 				iconItem,
 				Messages.buttonVillagerVariant,
@@ -292,15 +235,12 @@ public class VillagerShop extends BabyableShop<Villager> {
 	private Button getVillagerTypeEditorButton() {
 		return new ShopkeeperActionButton() {
 			@Override
-			public @Nullable ItemStack getIcon(EditorSession editorSession) {
+			public @Nullable ItemStack getIcon(EditorView editorView) {
 				return getVillagerTypeEditorItem();
 			}
 
 			@Override
-			protected boolean runAction(
-					EditorSession editorSession,
-					InventoryClickEvent clickEvent
-			) {
+			protected boolean runAction(EditorView editorView, InventoryClickEvent clickEvent) {
 				boolean backwards = clickEvent.isRightClick();
 				cycleVillagerType(backwards);
 				return true;
@@ -369,15 +309,12 @@ public class VillagerShop extends BabyableShop<Villager> {
 	private Button getVillagerLevelEditorButton() {
 		return new ShopkeeperActionButton() {
 			@Override
-			public @Nullable ItemStack getIcon(EditorSession editorSession) {
+			public @Nullable ItemStack getIcon(EditorView editorView) {
 				return getVillagerLevelEditorItem();
 			}
 
 			@Override
-			protected boolean runAction(
-					EditorSession editorSession,
-					InventoryClickEvent clickEvent
-			) {
+			protected boolean runAction(EditorView editorView, InventoryClickEvent clickEvent) {
 				boolean backwards = clickEvent.isRightClick();
 				cycleVillagerLevel(backwards);
 				return true;

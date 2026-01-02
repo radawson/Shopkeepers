@@ -1,13 +1,11 @@
 package com.nisovin.shopkeepers.compat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
@@ -24,6 +22,7 @@ import org.bukkit.inventory.meta.components.FoodComponent;
 import org.bukkit.inventory.meta.components.ToolComponent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.tag.DamageTypeTags;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
@@ -183,8 +182,14 @@ public class ServerAssumptionsTest {
 		itemMeta.setMaxStackSize(65);
 		itemMeta.setRarity(ItemRarity.EPIC);
 		itemMeta.setHideTooltip(true);
-		itemMeta.setCustomModelData(1);
-		//itemMeta.setFireResistant(true); // TODO Replaced with damage resistance in MC 1.21.2/3
+
+		var customModelData = itemMeta.getCustomModelDataComponent();
+		var customModelDataFloats = new ArrayList<Float>();
+		customModelDataFloats.add(1.0f);
+		customModelData.setFloats(Unsafe.castNonNull(customModelDataFloats));
+		itemMeta.setCustomModelDataComponent(customModelData);
+
+		itemMeta.setDamageResistant(DamageTypeTags.IS_EXPLOSION);
 		itemMeta.setUnbreakable(true);
 		((Damageable) itemMeta).setDamage(2);
 		((Damageable) itemMeta).setMaxDamage(10);
@@ -199,54 +204,75 @@ public class ServerAssumptionsTest {
 		itemMeta.setEnchantmentGlintOverride(true);
 		itemMeta.addEnchant(Enchantment.UNBREAKING, 1, true);
 		itemMeta.addEnchant(Enchantment.SHARPNESS, 2, true);
-		
-		// Add attribute modifiers - handle cases where attributes might not be available
-		Attribute attackSpeedAttr = Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.attack_speed"));
-		if (attackSpeedAttr != null) {
-			itemMeta.addAttributeModifier(
-					attackSpeedAttr,
-					new AttributeModifier(
-							new UUID(1L, 1L),
-							"attack speed bonus",
-							2,
-							Operation.ADD_NUMBER,
-							EquipmentSlotGroup.HAND
-					)
-			);
-			itemMeta.addAttributeModifier(
-					attackSpeedAttr,
-					new AttributeModifier(
-							new UUID(2L, 2L),
-							"attack speed bonus 2",
-							0.5,
-							Operation.MULTIPLY_SCALAR_1,
-							EquipmentSlotGroup.OFFHAND
-					)
-			);
-		}
-		
-		Attribute maxHealthAttr = Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.max_health"));
-		if (maxHealthAttr != null) {
-			itemMeta.addAttributeModifier(
-					maxHealthAttr,
-					new AttributeModifier(
-							new UUID(3L, 3L),
-							"max health bonus",
-							2,
-							Operation.ADD_NUMBER,
-							EquipmentSlotGroup.HAND
-					)
-			);
-		}
+		itemMeta.addAttributeModifier(Attribute.ATTACK_SPEED,
+				new AttributeModifier(
+						NamespacedKeyUtils.create("some_plugin", "attack-speed-bonus"),
+						2,
+						Operation.ADD_NUMBER,
+						EquipmentSlotGroup.HAND
+				)
+		);
+		itemMeta.addAttributeModifier(Attribute.ATTACK_SPEED,
+				new AttributeModifier(
+						NamespacedKeyUtils.create("some_plugin", "attack-speed-bonus-2"),
+						0.5,
+						Operation.MULTIPLY_SCALAR_1,
+						EquipmentSlotGroup.OFFHAND
+				)
+		);
+		itemMeta.addAttributeModifier(Attribute.MAX_HEALTH,
+				new AttributeModifier(
+						NamespacedKeyUtils.create("some_plugin", "max-health-bonus"),
+						2,
+						Operation.ADD_NUMBER,
+						EquipmentSlotGroup.HAND
+				)
+		);
 		itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
 		FoodComponent food = itemMeta.getFood();
 		food.setNutrition(2);
 		food.setSaturation(2.5f);
 		food.setCanAlwaysEat(true);
-		// food.setEatSeconds(5.5f);
-		// food.addEffect(new PotionEffect(PotionEffectType.BLINDNESS, 5, 1), 0.5f);
 		itemMeta.setFood(food);
+
+		// TODO Not available on Paper
+		/*var consumable = itemMeta.getConsumable();
+		consumable.setAnimation(Animation.EAT);
+		consumable.setConsumeParticles(true);
+		consumable.setConsumeSeconds(5.5f);
+		consumable.setSound(Sound.ENTITY_PLAYER_BURP);
+		// TODO Not sure how to create consumable effects via the API.
+		itemMeta.setConsumable(consumable);*/
+
+		// TODO SPIGOT-8104: Affects the shearing sound during deserialization, breaking the item
+		// comparison.
+		/*var equippable = itemMeta.getEquippable();
+		equippable.setSlot(EquipmentSlot.HEAD);
+		equippable.setEquipSound(Sound.ITEM_ARMOR_EQUIP_CHAIN);
+		equippable.setModel(RegistryUtils.getKeyOrThrow(Material.DIAMOND_HELMET));
+		equippable.setCameraOverlay(RegistryUtils.getKeyOrThrow(Material.CARVED_PUMPKIN));
+		equippable.setAllowedEntities(EntityType.PLAYER);
+		equippable.setDispensable(false);
+		equippable.setSwappable(false);
+		equippable.setDamageOnHurt(false);
+		equippable.setEquipOnInteract(true);
+		// TODO Added in 1.21.6
+		// equippable.setCanBeSheared(true);
+		// equippable.setShearingSound(Sound.ENTITY_SHEEP_SHEAR);
+		itemMeta.setEquippable(equippable);*/
+
+		var useCooldown = itemMeta.getUseCooldown();
+		useCooldown.setCooldownSeconds(1.5f);
+		useCooldown.setCooldownGroup(NamespacedKeyUtils.create("plugin", "cooldown"));
+		itemMeta.setUseCooldown(useCooldown);
+
+		itemMeta.setUseRemainder(new ItemStack(Material.BONE));
+
+		itemMeta.setEnchantable(15);
+		itemMeta.setTooltipStyle(NamespacedKeyUtils.create("plugin", "tooltip-style"));
+		itemMeta.setItemModel(NamespacedKeyUtils.create("plugin", "item-model"));
+		itemMeta.setGlider(true);
 
 		// Note: This data ends up getting stored in an arbitrary order internally.
 		PersistentDataContainer customTags = itemMeta.getPersistentDataContainer();
