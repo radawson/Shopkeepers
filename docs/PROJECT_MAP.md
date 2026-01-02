@@ -257,7 +257,7 @@ Each module has its own `build.gradle.kts` for module-specific configuration:
 ### `gradle.properties` Files
 
 **Root `gradle.properties`:**
-- `version=2.26.9` - Project version
+- `version=3.0.0` - Project version (uses Semantic Versioning: Major.Minor.Patch)
 - `group=com.nisovin.shopkeepers` - Maven group ID
 - `org.gradle.parallel=true` - Parallel build execution
 - System properties for locale
@@ -382,6 +382,7 @@ After building, the `build/` directory contains:
 ### Version Management
 
 - Version is stored in `gradle.properties` at root
+- Uses Semantic Versioning (Major.Minor.Patch format)
 - Automatically incremented after successful builds (patch version)
 - Propagated to all modules via `rootProject.extra["pluginVersion"]`
 - Used in resource processing for `plugin.yml` and `paper-plugin.yml`
