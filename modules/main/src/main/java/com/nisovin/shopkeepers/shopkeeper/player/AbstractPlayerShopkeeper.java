@@ -524,7 +524,8 @@ public abstract class AbstractPlayerShopkeeper
 					String logPrefix
 			) throws InvalidDataException {
 				// If tier property is missing, set it to 1 (default)
-				if (!shopkeeperData.contains(TIER)) {
+				// Check if the data key exists (the property has useDefaultIfMissing, so we check the raw key)
+				if (!shopkeeperData.contains("tier")) {
 					shopkeeperData.set(TIER, 1);
 					Log.debug(DebugOptions.itemMigrations, () -> logPrefix + "Migrated shop tier to 1 (default).");
 					return true;
