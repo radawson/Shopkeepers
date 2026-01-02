@@ -27,6 +27,7 @@ import com.nisovin.shopkeepers.shopcreation.ShopkeeperCreation;
 import com.nisovin.shopkeepers.shopkeeper.AbstractShopType;
 import com.nisovin.shopkeepers.shopkeeper.AbstractShopkeeper;
 import com.nisovin.shopkeepers.util.bukkit.BlockLocation;
+import com.nisovin.shopkeepers.util.bukkit.PermissionUtils;
 import com.nisovin.shopkeepers.util.bukkit.TextUtils;
 import com.nisovin.shopkeepers.util.interaction.InteractionUtils;
 import com.nisovin.shopkeepers.util.inventory.ItemUtils;
@@ -104,6 +105,22 @@ public abstract class AbstractPlayerShopType<T extends AbstractPlayerShopkeeper>
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public @Nullable T handleShopkeeperCreation(ShopCreationData shopCreationData) {
+		// Call parent to handle creation:
+		T shopkeeper = super.handleShopkeeperCreation(shopCreationData);
+		
+		// Set tier based on permission:
+		if (shopkeeper != null) {
+			Player creator = Unsafe.assertNonNull(shopCreationData.getCreator());
+			boolean isTier2 = PermissionUtils.hasPermission(creator, 
+					com.nisovin.shopkeepers.api.ShopkeepersPlugin.PLAYER_TIER2_PERMISSION);
+			shopkeeper.setTier(isTier2 ? 2 : 1);
+		}
+		
+		return shopkeeper;
 	}
 
 	@Override

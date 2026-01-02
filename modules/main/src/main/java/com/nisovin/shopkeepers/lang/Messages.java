@@ -457,6 +457,8 @@ public class Messages extends Config {
 	public static Text containerTooFarAway = Text.parse("&7The shopkeeper's container is too far away!");
 	public static Text containerNotPlaced = Text.parse("&7You must select a container you have recently placed!");
 	public static Text containerAlreadyInUse = Text.parse("&7Another shopkeeper is already using the selected container!");
+	public static Text containerUsedByTier1Shop = Text.parse("&7Container is used by a tier 1 shop. Tier 2 shops can only share with other tier 2 shops.");
+	public static Text containerUsedByTier2Shops = Text.parse("&7Container is shared by tier 2 shops. Tier 1 shops cannot share containers.");
 	public static Text noContainerAccess = Text.parse("&7You cannot access the selected container!");
 	public static Text tooManyShops = Text.parse("&7You have already reached the limit of how many shops you can own!");
 

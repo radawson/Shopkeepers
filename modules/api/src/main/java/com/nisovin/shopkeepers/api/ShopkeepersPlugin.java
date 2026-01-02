@@ -231,6 +231,13 @@ public interface ShopkeepersPlugin extends Plugin {
 	 * The <code>shopkeeper.player.book</code> permission.
 	 */
 	public static final String PLAYER_BOOK_PERMISSION = "shopkeeper.player.book";
+	/**
+	 * The <code>shopkeeper.player.tier2</code> permission.
+	 * <p>
+	 * Players with this permission can create tier 2 player shops, which can share containers with
+	 * other tier 2 shops.
+	 */
+	public static final String PLAYER_TIER2_PERMISSION = "shopkeeper.player.tier2";
 
 	/**
 	 * Checks if the given player has the permission to create any kind of shopkeeper.

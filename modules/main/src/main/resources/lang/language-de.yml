@@ -373,6 +373,8 @@ invalid-container: "&7Der ausgewählte Block ist kein gültiger Behälter!"
 container-too-far-away: "&7Der Behälter des Shops ist zu weit entfernt!"
 container-not-placed: "&7Du musst einen Behälter auswählen, den du kürzlich platziert hast!"
 container-already-in-use: "&7Ein anderer Shop benutzt bereits den ausgewählten Behälter!"
+container-used-by-tier1-shop: "&7Der Behälter wird von einem Tier-1-Shop verwendet. Tier-2-Shops können nur mit anderen Tier-2-Shops geteilt werden."
+container-used-by-tier2-shops: "&7Der Behälter wird von Tier-2-Shops geteilt. Tier-1-Shops können keine Behälter teilen."
 no-container-access: "&7Du hast keinen Zugriff auf den ausgewählten Behälter!"
 too-many-shops: "&7Du hast bereits das Limit an Shops erreicht, die du besitzen kannst!"
 

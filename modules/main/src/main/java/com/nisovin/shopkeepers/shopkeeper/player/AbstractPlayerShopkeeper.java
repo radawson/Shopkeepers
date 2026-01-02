@@ -58,6 +58,7 @@ import com.nisovin.shopkeepers.util.data.container.DataContainer;
 import com.nisovin.shopkeepers.util.data.property.BasicProperty;
 import com.nisovin.shopkeepers.util.data.property.Property;
 import com.nisovin.shopkeepers.util.data.property.validation.bukkit.ItemStackValidators;
+import com.nisovin.shopkeepers.util.data.property.validation.java.IntegerValidators;
 import com.nisovin.shopkeepers.util.data.property.validation.java.StringValidators;
 import com.nisovin.shopkeepers.util.data.serialization.DataAccessor;
 import com.nisovin.shopkeepers.util.data.serialization.InvalidDataException;
@@ -92,6 +93,7 @@ public abstract class AbstractPlayerShopkeeper
 	// Immutable, valid after successful initialization:
 	private BlockLocation container = BlockLocation.EMPTY;
 	private boolean notifyOnTrades = NOTIFY_ON_TRADES.getDefaultValue();
+	private int tier = TIER.getDefaultValue();
 	private @Nullable UnmodifiableItemStack hireCost = null; // Null if not for hire
 
 	// Initial threshold between [1, CHECK_CONTAINER_PERIOD_SECONDS] for load balancing:
@@ -137,6 +139,7 @@ public abstract class AbstractPlayerShopkeeper
 		this.loadOwner(shopkeeperData);
 		this.loadContainer(shopkeeperData);
 		this.loadNotifyOnTrades(shopkeeperData);
+		this.loadTier(shopkeeperData);
 		this.loadForHire(shopkeeperData);
 	}
 
@@ -146,6 +149,7 @@ public abstract class AbstractPlayerShopkeeper
 		this.saveOwner(shopkeeperData);
 		this.saveContainer(shopkeeperData);
 		this.saveNotifyOnTrades(shopkeeperData);
+		this.saveTier(shopkeeperData);
 		this.saveForHire(shopkeeperData);
 	}
 
@@ -412,6 +416,57 @@ public abstract class AbstractPlayerShopkeeper
 		this.notifyOnTrades = notifyOnTrades;
 	}
 
+	// TIER
+
+	public static final Property<Integer> TIER = new BasicProperty<Integer>()
+			.dataKeyAccessor("tier", NumberSerializers.INTEGER)
+			.validator(IntegerValidators.bounded(1, 2))
+			.defaultValue(1)
+			.useDefaultIfMissing() // For backward compatibility
+			.build();
+
+	private void loadTier(ShopkeeperData shopkeeperData) throws InvalidDataException {
+		assert shopkeeperData != null;
+		this._setTier(shopkeeperData.get(TIER));
+	}
+
+	private void saveTier(ShopkeeperData shopkeeperData) {
+		assert shopkeeperData != null;
+		shopkeeperData.set(TIER, tier);
+	}
+
+	/**
+	 * Gets the tier of this player shopkeeper.
+	 * <p>
+	 * Tier 1 shops cannot share containers with other shops.
+	 * Tier 2 shops can share containers with other tier 2 shops.
+	 * 
+	 * @return the tier (1 or 2)
+	 */
+	public int getTier() {
+		return tier;
+	}
+
+	/**
+	 * Sets the tier of this player shopkeeper.
+	 * <p>
+	 * Tier 1 shops cannot share containers with other shops.
+	 * Tier 2 shops can share containers with other tier 2 shops.
+	 * 
+	 * @param tier
+	 *            the tier (must be 1 or 2)
+	 */
+	public void setTier(int tier) {
+		if (this.tier == tier) return;
+		this._setTier(tier);
+		this.markDirty();
+	}
+
+	private void _setTier(int tier) {
+		Validate.isTrue(tier == 1 || tier == 2, () -> "Tier must be 1 or 2, got: " + tier);
+		this.tier = tier;
+	}
+
 	// HIRING
 
 	public static final Property<@Nullable UnmodifiableItemStack> HIRE_COST_ITEM = new BasicProperty<@Nullable UnmodifiableItemStack>()
@@ -455,6 +510,26 @@ public abstract class AbstractPlayerShopkeeper
 				shopkeeperData.set(HIRE_COST_ITEM, hireCost);
 				Log.debug(DebugOptions.itemMigrations, () -> logPrefix + "Migrated hire cost item.");
 				return true;
+			}
+		});
+
+		// Register migration for player shop tier:
+		ShopkeeperDataMigrator.registerMigration(new Migration(
+				"player-shop-tier",
+				MigrationPhase.ofShopkeeperClass(AbstractPlayerShopkeeper.class)
+		) {
+			@Override
+			public boolean migrate(
+					ShopkeeperData shopkeeperData,
+					String logPrefix
+			) throws InvalidDataException {
+				// If tier property is missing, set it to 1 (default)
+				if (!shopkeeperData.contains(TIER)) {
+					shopkeeperData.set(TIER, 1);
+					Log.debug(DebugOptions.itemMigrations, () -> logPrefix + "Migrated shop tier to 1 (default).");
+					return true;
+				}
+				return false; // Nothing to migrate
 			}
 		});
 	}

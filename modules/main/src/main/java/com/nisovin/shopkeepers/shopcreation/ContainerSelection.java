@@ -12,14 +12,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import com.nisovin.shopkeepers.SKShopkeepersPlugin;
 import com.nisovin.shopkeepers.api.ShopkeepersPlugin;
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
+import com.nisovin.shopkeepers.api.shopkeeper.player.PlayerShopkeeper;
 import com.nisovin.shopkeepers.config.Settings;
 import com.nisovin.shopkeepers.container.ShopContainers;
 import com.nisovin.shopkeepers.container.protection.ProtectedContainers;
 import com.nisovin.shopkeepers.lang.Messages;
+import com.nisovin.shopkeepers.shopkeeper.player.AbstractPlayerShopkeeper;
 import com.nisovin.shopkeepers.util.bukkit.BlockLocation;
 import com.nisovin.shopkeepers.util.bukkit.MutableBlockLocation;
+import com.nisovin.shopkeepers.util.bukkit.PermissionUtils;
 import com.nisovin.shopkeepers.util.bukkit.TextUtils;
 import com.nisovin.shopkeepers.util.interaction.InteractionUtils;
 import com.nisovin.shopkeepers.util.java.Validate;
@@ -123,8 +127,34 @@ public class ContainerSelection {
 		Validate.notNull(containerBlock, "containerBlock is null");
 		// Check if the container is already used by some other shopkeeper:
 		if (protectedContainers.isContainerProtected(containerBlock, null)) {
-			TextUtils.sendMessage(player, Messages.containerAlreadyInUse);
-			return false;
+			// Check if creating tier 2 shop and if all existing shops are tier 2:
+			boolean isTier2 = PermissionUtils.hasPermission(player, 
+					com.nisovin.shopkeepers.api.ShopkeepersPlugin.PLAYER_TIER2_PERMISSION);
+			
+			if (isTier2) {
+				// Check if all existing shops using this container are tier 2:
+				List<? extends PlayerShopkeeper> existingShops = 
+						protectedContainers.getShopkeepersUsingContainer(containerBlock);
+				
+				if (!existingShops.isEmpty()) {
+					boolean allExistingAreTier2 = existingShops.stream()
+							.allMatch(shop -> shop instanceof AbstractPlayerShopkeeper
+									&& ((AbstractPlayerShopkeeper) shop).getTier() == 2);
+					
+					if (allExistingAreTier2) {
+						// Allow sharing - tier 2 shops can share with tier 2 shops
+						// Continue with other validations below
+					} else {
+						// Tier 2 shop trying to use tier 1 container
+						TextUtils.sendMessage(player, Messages.containerUsedByTier1Shop);
+						return false;
+					}
+				}
+			} else {
+				// Tier 1 shop or container has mixed tiers - cannot share
+				TextUtils.sendMessage(player, Messages.containerAlreadyInUse);
+				return false;
+			}
 		}
 
 		// Check for recently placed:

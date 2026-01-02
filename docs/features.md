@@ -39,12 +39,18 @@ Player-owned shops that pull items from containers.
 - Owner permissions
 - Trade notifications
 - Shop limits per player
+- **Tier System (v3.0.0+)**: Two-tier system for container sharing
+  - **Tier 1 Shops**: Standard shops, one shop per container (default)
+  - **Tier 2 Shops**: VIP shops that can share containers with other tier 2 shops
+  - Requires `shopkeeper.player.tier2` permission for tier 2 shops
+  - Useful for centralized inventory management with HyperConomy
 
 **Use Cases:**
 - Player-to-player trading
 - Player-run businesses
 - Decentralized economy
 - Community markets
+- VIP shops with shared inventory (tier 2)
 
 **Shop Types:**
 - **Selling Shops**: Players buy items from the shop
@@ -177,6 +183,13 @@ Player shops require containers for stock management.
 - Prevents unauthorized access
 - Prevents item extraction (hoppers, etc.)
 - Configurable protection settings
+
+**Container Sharing (v3.0.0+):**
+- **Tier 1 Shops**: Cannot share containers (one shop per container)
+- **Tier 2 Shops**: Can share containers with other tier 2 shops
+- Mixed tiers not allowed (tier 1 and tier 2 cannot share)
+- Tier determined by `shopkeeper.player.tier2` permission
+- Useful for VIP players managing multiple shops with shared inventory
 
 **Distance Limits:**
 - Maximum distance from container

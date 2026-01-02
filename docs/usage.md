@@ -71,6 +71,14 @@ Main Shopkeepers command. Can be used to create shopkeepers or access subcommand
 - Must have items (for selling shops)
 - Must have space (for buying shops)
 
+**Tier 2 Shops (VIP Container Sharing):**
+- Players with `shopkeeper.player.tier2` permission can create tier 2 shops
+- Tier 2 shops can share containers with other tier 2 shops
+- Tier 1 shops (default) cannot share containers
+- Mixed tiers not allowed (tier 1 and tier 2 cannot share the same container)
+- Useful for VIP players managing multiple shops with shared inventory
+- Tier is automatically determined during shop creation based on permission
+
 ### Creating Sign Shops
 
 1. Place a sign (wall sign, sign post, or hanging sign)
@@ -314,7 +322,8 @@ shopkeeper.* (all permissions, default: op)
 │   ├── shopkeeper.player.sell
 │   ├── shopkeeper.player.buy
 │   ├── shopkeeper.player.trade
-│   └── shopkeeper.player.book
+│   ├── shopkeeper.player.book
+│   └── shopkeeper.player.tier2 (default: false) - Create tier 2 shops with container sharing
 ├── shopkeeper.sign (default: true)
 ├── shopkeeper.hanging-sign (default: true)
 └── shopkeeper.trade-notifications.admin (default: op)
