@@ -168,7 +168,7 @@ class BaseBlockShopListener implements Listener {
 		Log.debug(() -> "Player " + player.getName() + " is interacting (" + event.getHand()
 				+ ") with block at " + TextUtils.getLocationString(block));
 
-		AbstractShopkeeper shopkeeper = shopkeeperRegistry.getShopkeeperByBlock(block);
+		AbstractShopkeeper shopkeeper = shopkeeperRegistry.getShopkeeperBySignBlock(block);
 		if (shopkeeper == null) {
 			Log.debug("  Non-shopkeeper");
 			return;
@@ -232,7 +232,7 @@ class BaseBlockShopListener implements Listener {
 			int adjacentX = blockX + blockFace.getModX();
 			int adjacentY = blockY + blockFace.getModY();
 			int adjacentZ = blockZ + blockFace.getModZ();
-			Shopkeeper shopkeeper = shopkeeperRegistry.getShopkeeperByBlock(
+			Shopkeeper shopkeeper = shopkeeperRegistry.getShopkeeperBySignBlock(
 					worldName,
 					adjacentX,
 					adjacentY,

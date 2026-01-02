@@ -230,8 +230,24 @@ public abstract class BaseEntityShopObject<E extends Entity>
 		// Apply name (if it has/uses one):
 		this.applyName(entity, shopkeeper.getName());
 
+		// Apply subtype attributes (variant, color, size, etc.) before spawning to avoid flicker:
+		this.applySubtypeAttributes(entity);
+
 		// Any version-specific preparation:
 		Compat.getProvider().prepareEntity(entity);
+	}
+
+	/**
+	 * Applies subtype-specific attributes (variant, color, size, etc.) to the entity.
+	 * <p>
+	 * This is called from {@link #prepareEntity(Object)} before the entity is spawned to avoid
+	 * visual flicker. Subclasses should override this method to apply their specific attributes.
+	 * 
+	 * @param entity
+	 *            the entity about to be spawned, not <code>null</code>
+	 */
+	protected void applySubtypeAttributes(@NonNull E entity) {
+		// Default implementation does nothing. Subclasses can override to apply their attributes.
 	}
 
 	/**
@@ -327,7 +343,7 @@ public abstract class BaseEntityShopObject<E extends Entity>
 			// Register the shop object for our custom AI processing:
 			context.baseEntityShops.getEntityAI().addShopObject(this);
 
-			// Apply sub-type:
+			// Apply sub-type (for things that must happen after spawning):
 			this.onSpawn();
 
 			// Reset all state related to respawn throttling:

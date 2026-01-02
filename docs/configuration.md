@@ -20,7 +20,7 @@ This guide covers all configuration options available in Shopkeepers' `config.ym
 ### Debug and Metrics
 
 ```yaml
-config-version: 9                    # Config version (don't edit manually)
+config-version: 10                   # Config version (don't edit manually)
 debug: false                        # Enable debug mode
 debug-options: []                   # Additional debug options
 enable-metrics: true                 # Enable bStats metrics
@@ -107,11 +107,22 @@ disable-inventory-verification: false  # Disable inventory verification
 
 ### Creation Item
 
+**Old Format (deprecated):**
 ```yaml
 shop-creation-item:
   type: VILLAGER_SPAWN_EGG          # Item type for creating shops
   display-name: '{"text":"Shopkeeper","italic":false,"color":"green"}'
 ```
+
+**New Format (v2.24.0+):**
+```yaml
+shop-creation-item:
+  id: 'minecraft:villager_spawn_egg'  # Minecraft item type ID
+  components:
+    minecraft:custom_name: '{color:"green",italic:0b,text:"Shopkeeper"}'  # SNBT format (1.21.5+)
+```
+
+**Note:** The config automatically migrates from the old format. The new format uses Minecraft's item type IDs and SNBT for components. For 1.20.5-1.21.4, use JSON format for text components.
 
 ### Item Tagging
 
@@ -130,11 +141,14 @@ invert-shop-type-and-object-type-selection: false  # Invert selection controls
 ### Player Shops
 
 ```yaml
-create-player-shop-with-command: false  # Allow command-based creation
+# Note: create-player-shop-with-command removed in v2.26.0
+# Use shopkeeper.create permission instead for command-based creation
 require-container-recently-placed: true  # Container must be recently placed
 max-container-distance: 15              # Max distance from container
 deleting-player-shop-returns-creation-item: false  # Return item on deletion
 ```
+
+**Note:** The `create-player-shop-with-command` setting was removed in v2.26.0. Use the `shopkeeper.create` permission instead for more flexible control over command-based shop creation.
 
 ### Shop Limits
 
@@ -172,23 +186,27 @@ enabled-living-shops:              # List of allowed mob types
   # ... many more
 ```
 
-### Mob Behavior
+### Entity Behavior
 
 ```yaml
 disable-gravity: false             # Disable gravity for shopkeepers
 gravity-chunk-range: 4             # Gravity range in chunks
-mob-behavior-tick-period: 3         # Behavior update period (ticks)
+entity-behavior-tick-period: 3     # Behavior update period (ticks) (renamed from mob-behavior-tick-period)
 ```
 
-### Mob-Specific Settings
+**Note:** Flying mobs (allay, bat, bee, etc.) have gravity disabled by default and can be placed in the air.
+
+### Entity-Specific Settings
 
 ```yaml
 shulker-peek-if-player-nearby: true  # Shulker peek behavior
 shulker-peek-height: 0.3             # Shulker peek height
 slime-max-size: 5                     # Max slime size (1-10)
 magma-cube-max-size: 5                # Max magma cube size (1-10)
-silence-living-shop-entities: true    # Silence mob sounds
+silence-shop-entities: true           # Silence shop entity sounds (renamed from silence-living-shop-entities)
 ```
+
+**Note:** Setting renamed from `silence-living-shop-entities` to `silence-shop-entities` in v2.26.0.
 
 ### Nameplates
 
@@ -218,6 +236,15 @@ enable-sign-post-shops: true       # Enable sign posts
 enable-hanging-sign-shops: true   # Enable hanging signs
 enable-glowing-sign-text: true     # Enable glowing text
 ```
+
+### End Crystal Shops
+
+```yaml
+enable-end-crystal-shops: true     # Enable end crystal shops (v2.26.0+)
+allow-end-crystal-shops-in-the-end: false  # Allow in The End (default: false)
+```
+
+**Note:** End crystal shops are disabled in The End by default to prevent interference with dragon fights.
 
 ## Naming
 
@@ -290,6 +317,7 @@ name-item: NAME_TAG                 # Name button/item
 move-item: ENDER_PEARL              # Move button
 container-item: CHEST               # Container button
 trade-notifications-item: BELL       # Trade notifications button
+shop-information-item: PAPER        # Shop information item (v2.26.0+)
 delete-item: BONE                   # Delete button
 ```
 
@@ -299,7 +327,10 @@ delete-item: BONE                   # Delete button
 enable-all-equipment-editor-slots: false  # Enable all equipment slots
 enable-moving-of-player-shops: true       # Allow moving player shops
 enable-container-option-on-player-shop: true  # Container button in editor
+shop-information-item: PAPER              # Item for shop information display (v2.26.0+)
 ```
+
+**Note:** Amount-per-click in editor changed from 10 to 8 items (shift-click) for better stack size alignment.
 
 ## Trading
 
@@ -365,6 +396,8 @@ trade-log-next-merge-timeout-ticks: 100  # Timeout for merge
 log-item-metadata: false            # Log item metadata
 ```
 
+**Note:** Trading history command (`/shopkeeper history`) requires `SQLITE` storage. IO buffering delay is 10 seconds (reduced from 30 seconds in v2.25.0).
+
 ## Currencies
 
 ```yaml
@@ -382,6 +415,10 @@ block-villager-spawns: false        # Block villager spawning
 disable-zombie-villager-curing: false  # Prevent curing zombie villagers
 hire-other-villagers: false         # Allow hiring regular villagers
 edit-regular-villagers: false       # Allow editing regular villagers
+disable-other-villagers-worlds: []  # Per-world villager disabling (v2.26.0+)
+block-villager-spawns-worlds: []    # Per-world spawn blocking (v2.26.0+)
+disable-zombie-villager-curing-worlds: []  # Per-world curing prevention (v2.26.0+)
+hire-other-villagers-worlds: []    # Per-world hiring (v2.26.0+)
 ```
 
 ## Wandering Traders
@@ -391,6 +428,9 @@ disable-wandering-traders: false    # Prevent trading with wandering traders
 block-wandering-trader-spawns: false  # Block wandering trader spawning
 hire-wandering-traders: false       # Allow hiring wandering traders
 edit-regular-wandering-traders: false  # Allow editing wandering traders
+disable-wandering-traders-worlds: []  # Per-world trader disabling (v2.26.0+)
+block-wandering-trader-spawns-worlds: []  # Per-world spawn blocking (v2.26.0+)
+hire-wandering-traders-worlds: []   # Per-world hiring (v2.26.0+)
 ```
 
 ## Hiring
@@ -434,6 +474,46 @@ Most settings require a server restart. Some can be reloaded with `/shopkeeper r
 - Disable unused features
 - Reduce trade log detail
 
-For more help, see the [Usage Guide](usage.md) or check GitHub Issues.
+For more help, see the [Usage Guide](usage.md), [Features Guide](features.md), or check GitHub Issues.
+
+## Recent Configuration Changes
+
+### v2.26.0 Changes
+
+**Config Version:** Updated to version 10 (automatic migration)
+
+**Setting Renames:**
+- `silence-living-shop-entities` → `silence-shop-entities`
+- `mobe-behavior-tick-period` → `entity-behavior-tick-period`
+
+**Removed Settings:**
+- `create-player-shop-with-command` (replaced by `shopkeeper.create` permission)
+
+**New Settings:**
+- `enable-end-crystal-shops` (default: true)
+- `allow-end-crystal-shops-in-the-end` (default: false)
+- `shop-information-item` (default: PAPER)
+- Per-world villager settings: `disable-other-villagers-worlds`, `block-villager-spawns-worlds`, `disable-zombie-villager-curing-worlds`, `hire-other-villagers-worlds`
+- Per-world wandering trader settings: `disable-wandering-traders-worlds`, `block-wandering-trader-spawns-worlds`, `hire-wandering-traders-worlds`
+
+**Item Data Format:**
+- Shop creation items now use Minecraft item type IDs and SNBT components (v2.24.0+)
+- Old format is automatically migrated
+
+### v2.25.0 Changes
+
+**Breaking Changes:**
+- Dropped support for Minecraft versions below 1.21.5
+
+**New Features:**
+- Trading history command requires SQLite trade log storage
+- Trade log IO buffering delay reduced to 10 seconds
+
+### v2.24.0 Changes
+
+**Major Changes:**
+- New item data format using Minecraft item type IDs
+- Shopkeeper snapshots feature
+- New mob types: copper golem, mannequin, armor stand
 
 

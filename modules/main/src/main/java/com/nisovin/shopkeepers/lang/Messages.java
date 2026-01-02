@@ -921,7 +921,7 @@ public class Messages extends Config {
 	public static Text ambiguousShopkeeperNameEntry = Text.parse("&c  - &e{id})&c '&e{name}&r&c' (&6{uuid}&c)");
 	public static Text ambiguousShopkeeperNameMore = Text.parse("&c  - ....");
 
-	public static Text ambiguousTargetShopkeeper = Text.parse("&cThere are multiple shopkeepers being targeted!");
+	public static Text ambiguousTargetShopkeeper = Text.parse("&cAmbiguous shopkeeper. Specify the shopkeeper explicitly instead.");
 	public static Text ambiguousTargetShopkeeperEntry = Text.parse("&c  - &e{id})&c '&e{name}&r&c' (&6{uuid}&c)");
 	public static Text ambiguousTargetShopkeeperMore = Text.parse("&c  - ....");
 

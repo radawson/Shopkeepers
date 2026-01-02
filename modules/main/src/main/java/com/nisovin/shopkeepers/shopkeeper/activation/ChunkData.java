@@ -61,7 +61,8 @@ final class ChunkData {
 		}
 	}
 
-	// Checks if the chunk is loaded, but not yet active or pending activation:
+	// Checks if the chunk is loaded (in memory), but not yet active (spawned) or pending
+	// activation:
 	boolean needsActivation() {
 		// Check if the chunk is already active or pending activation (avoids unnecessary
 		// isChunkLoaded calls):

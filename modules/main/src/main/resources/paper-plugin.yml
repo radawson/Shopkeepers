@@ -1,0 +1,42 @@
+name: Shopkeepers
+version: '${pluginVersion}'
+description: Custom villager shopkeepers
+authors: [nisovin, blablubbabc]
+website: '${dboUrl}'
+api-version: '1.21.11'
+
+main: com.nisovin.shopkeepers.SKShopkeepersPlugin
+bootstrapper: com.nisovin.shopkeepers.SKShopkeepersBootstrap
+loader: com.nisovin.shopkeepers.SKShopkeepersLoader
+
+# Loading after world management plugins and soft dependencies:
+dependencies:
+  server:
+    Multiverse-Core:
+      load: AFTER
+      required: false
+    "My Worlds":
+      load: AFTER
+      required: false
+    Transporter:
+      load: AFTER
+      required: false
+    Towny:
+      load: AFTER
+      required: false
+    WorldGuard:
+      load: AFTER
+      required: false
+    Citizens:
+      load: AFTER
+      required: false
+    Vault:
+      load: AFTER
+      required: false
+    Gringotts:
+      load: AFTER
+      required: false
+    ChestShop:
+      load: AFTER
+      required: false
+

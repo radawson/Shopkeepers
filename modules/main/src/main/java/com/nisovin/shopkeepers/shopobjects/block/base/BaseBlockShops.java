@@ -96,7 +96,7 @@ public class BaseBlockShops {
 	 *         {@link BaseBlockShopObject} behaviors
 	 */
 	public boolean isBaseBlockShop(String worldName, int blockX, int blockY, int blockZ) {
-		Shopkeeper shopkeeper = shopkeeperRegistry.getShopkeeperByBlock(
+		Shopkeeper shopkeeper = shopkeeperRegistry.getShopkeeperBySignBlock(
 				worldName,
 				blockX,
 				blockY,

@@ -75,8 +75,16 @@ public class SlimeShop extends SKLivingShopObject<Slime> {
 	}
 
 	@Override
+	protected void applySubtypeAttributes(org.bukkit.entity.Slime entity) {
+		super.applySubtypeAttributes(entity);
+		// Apply size before spawning to avoid flicker:
+		entity.setSize(this.getSize());
+	}
+
+	@Override
 	protected void onSpawn() {
 		super.onSpawn();
+		// Size is already applied in applySubtypeAttributes, but we keep this for runtime updates:
 		this.applySize();
 	}
 

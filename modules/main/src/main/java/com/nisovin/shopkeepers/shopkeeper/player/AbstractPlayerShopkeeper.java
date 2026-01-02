@@ -281,7 +281,7 @@ public abstract class AbstractPlayerShopkeeper
 	// OWNER
 
 	public static final Property<UUID> OWNER_UNIQUE_ID = new BasicProperty<UUID>()
-			.dataKeyAccessor("owner uuid", UUIDSerializers.LENIENT)
+			.dataKeyAccessor("owner-uuid", UUIDSerializers.LENIENT)
 			.build();
 	public static final Property<String> OWNER_NAME = new BasicProperty<String>()
 			.dataKeyAccessor("owner", StringSerializers.SCALAR)

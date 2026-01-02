@@ -20,7 +20,8 @@ public interface Type {
 	/**
 	 * Gets the aliases of this type.
 	 * <p>
-	 * The aliases are for example used by {@link #matches(String)}.
+	 * Note: Aliases are not used by {@link #matches(String)}. They are kept for backward
+	 * compatibility and may be used by other parts of the system.
 	 *
 	 * @return the aliases, not <code>null</code>, can be empty
 	 */
@@ -64,7 +65,7 @@ public interface Type {
 	 * Checks if the given identifier matches this type.
 	 * <p>
 	 * Typically, this normalizes and compares the given identifier with the identifier of this
-	 * type, its aliases, and its display name.
+	 * type and its display name. Aliases are not checked by this method.
 	 * 
 	 * @param identifier
 	 *            the identifier, not <code>null</code>

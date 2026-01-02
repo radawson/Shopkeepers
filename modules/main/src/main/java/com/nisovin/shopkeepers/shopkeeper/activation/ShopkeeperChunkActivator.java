@@ -588,8 +588,8 @@ public class ShopkeeperChunkActivator {
 	// marked as active when the first shopkeeper is added, and any shopkeepers added to an already
 	// active chunk are immediately activated.
 	// But this also logs summary debug messages about the activated shopkeepers. Maybe disable
-	// automatic activation when loading shopkeepers and then activate them all in bulk via this
-	// method?
+	// automatic activation when shopkeepers are loaded from storage and then activate them all in
+	// bulk via this method?
 	public void activateShopkeepersInAllWorlds() {
 		// Activate (spawn) shopkeepers in loaded chunks of all loaded worlds:
 		List<? extends World> worlds = Unsafe.castNonNull(Bukkit.getWorlds());
@@ -641,7 +641,8 @@ public class ShopkeeperChunkActivator {
 
 	// WORLD UNLOAD
 
-	// Called by SKShopkeepersPlugin during disable, before the shopkeepers are unloaded.
+	// Called by SKShopkeepersPlugin during disable, before the shopkeepers are unloaded from
+	// storage.
 	public void deactivateShopkeepersInAllWorlds() {
 		// Deactivate (despawn) shopkeepers in all loaded worlds:
 		List<? extends World> worlds = Unsafe.castNonNull(Bukkit.getWorlds());

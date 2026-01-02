@@ -88,7 +88,6 @@ public abstract class AbstractType implements Type {
 		Validate.notNull(identifier, "identifier is null");
 		String normalized = StringUtils.normalize(identifier);
 		if (normalized.equals(this.identifier)) return true;
-		if (this.aliases.contains(normalized)) return true;
 		String displayName = StringUtils.normalize(this.getDisplayName());
 		return normalized.equals(displayName);
 	}

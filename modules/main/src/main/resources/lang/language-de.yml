@@ -794,7 +794,7 @@ ambiguous-shopkeeper-name: "&cEs gibt mehrere Shops für den Namen '&e{name}&c'!
 ambiguous-shopkeeper-name-entry: "&c  - &e{id})&c '&e{name}&r&c' (&6{uuid}&c)"
 ambiguous-shopkeeper-name-more: "&c  - ...."
 
-ambiguous-target-shopkeeper: "&cEs werden mehrere Shops anvisiert!"
+ambiguous-target-shopkeeper: "&cMehrdeutiger Shop. Gib den Shop explizit an."
 ambiguous-target-shopkeeper-entry: "&c  - &e{id})&c '&e{name}&r&c' (&6{uuid}&c)"
 ambiguous-target-shopkeeper-more: "&c  - ...."
 

@@ -648,9 +648,9 @@ public class SKShopkeeperRegistry implements ShopkeeperRegistry {
 	}
 
 	@Override
-	public @Nullable AbstractShopkeeper getShopkeeperByBlock(Block block) {
+	public @Nullable AbstractShopkeeper getShopkeeperBySignBlock(Block block) {
 		Validate.notNull(block, "block is null");
-		return getShopkeeperByBlock(
+		return getShopkeeperBySignBlock(
 				block.getWorld().getName(),
 				block.getX(),
 				block.getY(),
@@ -659,13 +659,13 @@ public class SKShopkeeperRegistry implements ShopkeeperRegistry {
 	}
 
 	@Override
-	public @Nullable AbstractShopkeeper getShopkeeperByBlock(String worldName, int x, int y, int z) {
+	public @Nullable AbstractShopkeeper getShopkeeperBySignBlock(String worldName, int x, int y, int z) {
 		Object objectId = BlockShopObjectIds.getSharedObjectId(worldName, x, y, z);
 		return shopObjectRegistry.getShopkeeperByObjectId(objectId);
 	}
 
 	@Override
 	public boolean isShopkeeper(Block block) {
-		return (this.getShopkeeperByBlock(block) != null);
+		return (this.getShopkeeperBySignBlock(block) != null);
 	}
 }

@@ -61,8 +61,16 @@ public class CowShop extends BabyableShop<Cow> {
 	}
 
 	@Override
+	protected void applySubtypeAttributes(Cow entity) {
+		super.applySubtypeAttributes(entity);
+		// Apply variant before spawning to avoid flicker:
+		entity.setVariant(this.getVariant());
+	}
+
+	@Override
 	protected void onSpawn() {
 		super.onSpawn();
+		// Variant is already applied in applySubtypeAttributes, but we keep this for runtime updates:
 		this.applyVariant();
 	}
 

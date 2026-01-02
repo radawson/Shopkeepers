@@ -226,7 +226,9 @@ public class SKShopkeepersPlugin extends JavaPlugin implements InternalShopkeepe
 
 	@Override
 	public void onLoad() {
-		Log.setLogger(this.getLogger()); // Set up logger early
+		// Set up logger early (may already be set by bootstrapper, but ensure it's set for
+		// backward compatibility with non-Paper plugin loading)
+		Log.setLogger(this.getLogger());
 		// Setting plugin reference early, so it is also available for any code running here:
 		plugin = this;
 		InternalShopkeepersAPI.enable(this);

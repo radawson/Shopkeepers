@@ -78,7 +78,7 @@ tasks.named<ProcessResources>("processResources") {
 	inputs.property("pluginVersion", rootProject.extra["pluginVersion"])
 	inputs.property("dboUrl", rootProject.findProperty("dboUrl"))
 	
-	filesMatching("plugin.yml") {
+	filesMatching(listOf("plugin.yml", "paper-plugin.yml")) {
 		expand(
 			mapOf(
 				"pluginVersion" to rootProject.extra["pluginVersion"],

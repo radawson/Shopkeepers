@@ -92,6 +92,8 @@ paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArt
 
 // Store version at configuration time
 val projectVersion = version.toString()
+// Set pluginVersion in extra properties for use by subprojects
+rootProject.extra["pluginVersion"] = projectVersion
 
 println("Project version: $version")
 
@@ -169,7 +171,7 @@ tasks {
     
     // Process resources
     processResources {
-        filesMatching(listOf("plugin.yml")) {
+        filesMatching(listOf("plugin.yml", "paper-plugin.yml")) {
             expand(
                 "pluginVersion" to project.version,
                 "dboUrl" to (project.findProperty("dboUrl") ?: "")

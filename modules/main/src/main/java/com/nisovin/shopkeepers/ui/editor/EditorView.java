@@ -508,13 +508,13 @@ public abstract class EditorView extends View {
 			newAmount += 1;
 			break;
 		case SHIFT_LEFT:
-			newAmount += 10;
+			newAmount += 8;
 			break;
 		case RIGHT:
 			newAmount -= 1;
 			break;
 		case SHIFT_RIGHT:
-			newAmount -= 10;
+			newAmount -= 8;
 			break;
 		case MIDDLE:
 			newAmount = minAmount;

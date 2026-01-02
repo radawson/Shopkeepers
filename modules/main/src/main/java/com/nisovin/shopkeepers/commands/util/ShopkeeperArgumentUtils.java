@@ -194,7 +194,7 @@ public final class ShopkeeperArgumentUtils {
 			Block targetBlock,
 			TargetShopkeeperFilter filter
 	) {
-		Shopkeeper shopkeeper = ShopkeepersAPI.getShopkeeperRegistry().getShopkeeperByBlock(targetBlock);
+		Shopkeeper shopkeeper = ShopkeepersAPI.getShopkeeperRegistry().getShopkeeperBySignBlock(targetBlock);
 		if (shopkeeper == null) return null;
 		if (!filter.test(shopkeeper)) {
 			return new TargetShopkeepersResult(filter.getInvalidTargetErrorMsg(shopkeeper));

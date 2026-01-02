@@ -786,7 +786,7 @@ ambiguous-shopkeeper-name: "&cThere are multiple shopkeepers for the name '&e{na
 ambiguous-shopkeeper-name-entry: "&c  - &e{id})&c '&e{name}&r&c' (&6{uuid}&c)"
 ambiguous-shopkeeper-name-more: "&c  - ...."
 
-ambiguous-target-shopkeeper: "&cThere are multiple shopkeepers being targeted!"
+ambiguous-target-shopkeeper: "&cAmbiguous shopkeeper. Specify the shopkeeper explicitly instead."
 ambiguous-target-shopkeeper-entry: "&c  - &e{id})&c '&e{name}&r&c' (&6{uuid}&c)"
 ambiguous-target-shopkeeper-more: "&c  - ...."
 

@@ -64,15 +64,23 @@ Shopkeepers can appear as various mob types.
 - Cats, Chickens, Cows
 - Creepers, Dolphins, Donkeys
 - Endermen, Evokers, Foxes
+- Camel husk, Nautilus, Zombie nautilus, Parched (v2.25.0+)
+- Copper golem, Mannequin, Armor stand (v2.24.0+)
 - And many more...
+
+**Flying Mobs (v2.26.0+):**
+- Can be placed in the air without falling
+- Includes: Allay, bat, bee, chicken, blaze, ender dragon, ghast, happy ghast, parrot, phantom, vex, wither
 
 **Features:**
 - Customizable appearance
 - Equipment support
 - Nameplate display
-- Gravity control
+- Gravity control (disabled for flying mobs)
 - AI behavior customization
 - Sound control
+- Mob-specific attributes (variant, color, size, etc.)
+- Attributes set before spawning to avoid visual flicker
 
 ### Sign Shops
 Shopkeepers can be represented as signs.
@@ -86,6 +94,15 @@ Shopkeepers can be represented as signs.
 - Glowing text option
 - Compact shop design
 - Easy placement
+- No entity overhead
+
+### End Crystal Shops
+Shopkeepers can be represented as end crystals (v2.26.0+).
+
+**Features:**
+- Toggle bottom slab visibility
+- Unique visual appearance
+- Disabled in The End by default (configurable)
 - No entity overhead
 
 ### Citizens NPC Shops
@@ -123,16 +140,23 @@ Integration with Citizens plugin for NPC shopkeepers.
 ### Trade Management
 
 **Features:**
-- Multiple trade pages (up to 10)
+- Multiple trade pages (up to 10, configurable)
 - Trade setup interface
 - Trade validation
 - Trade notifications
-- Trade history (optional)
+- Trade history (SQLite storage, v2.25.0+)
+- Shop closing feature (v2.26.0+) - Temporarily disable trading
 
 **Trade Limits:**
 - Configurable max trades per page
-- Configurable max pages
+- Configurable max pages (max 10)
 - Per-shop trade limits
+
+**Trading History (v2.25.0+):**
+- View your trading history via `/shopkeeper history`
+- Filter by player, shop, or owner
+- Pagination support
+- Requires SQLite trade log storage
 
 ## Container Integration
 
@@ -225,6 +249,9 @@ Graphical interface for managing shopkeepers.
 - Container access
 - Shop deletion
 - Shop movement
+- Shop information display (v2.26.0+) - Shows ID, UUID, name, type, location, owner
+- Shop open/close toggle (v2.26.0+) - Temporarily disable trading
+- Amount-per-click: 8 items (shift-click) for intuitive stack management
 
 ### Editor Access
 - Right-click shopkeeper while sneaking
@@ -280,14 +307,20 @@ Shopkeepers provides an API for plugin developers.
 **Registry:**
 - Shopkeeper registry
 - Query loaded shopkeepers
-- Shopkeeper lookup
+- Shopkeeper lookup by ID, UUID, name, block, entity
 - Shopkeeper creation
+- `getShopkeeperBySignBlock()` - Get shopkeeper by sign block (renamed from `getShopkeeperByBlock`)
 
 **Events:**
 - Shopkeeper creation events
 - Trade events
 - Editor events
 - Shopkeeper removal events
+
+**Type System:**
+- `SelectableTypeRegistry#canBeSelected` (v2.26.0+)
+- Type matching (aliases no longer checked in `matches()`)
+- Dynamic type registration support
 
 **Limitations:**
 - API is still evolving
@@ -302,7 +335,7 @@ Shopkeepers provides an API for plugin developers.
 <dependency>
   <groupId>com.nisovin.shopkeepers</groupId>
   <artifactId>ShopkeepersAPI</artifactId>
-  <version>2.15.1</version>
+  <version>2.26.0</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -344,9 +377,10 @@ See: https://github.com/Shopkeepers/Shopkeepers/tree/master/modules/api/src/main
 
 ### Shop Limits
 - Per-player shop limits
-- Permission-based limits
-- Unlimited permission option
+- Permission-based limits (`shopkeeper.maxshops.<count>`)
+- Unlimited permission option (`shopkeeper.maxshops.unlimited`)
 - Default limit configuration
+- Command-based creation requires `shopkeeper.create` permission (v2.26.0+)
 
 ### Inactive Player Cleanup
 - Automatic cleanup of inactive player shops
@@ -355,9 +389,16 @@ See: https://github.com/Shopkeepers/Shopkeepers/tree/master/modules/api/src/main
 
 ### Shop Movement
 - Move player shops
-- Teleport shopkeepers
+- Teleport shopkeepers via `/shopkeeper teleport`
 - Location updates
 - Container distance checks
+- Force teleportation option
+
+### Shopkeeper Snapshots (v2.24.0+)
+- Create snapshots of all shopkeepers
+- Restore snapshots (replaces current shopkeepers)
+- List and remove snapshots
+- Useful for backups and testing
 
 ### Debug Features
 - Debug mode

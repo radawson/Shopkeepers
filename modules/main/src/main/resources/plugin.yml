@@ -9,11 +9,8 @@ softdepend: [Multiverse-Core, My Worlds, Transporter, Towny, WorldGuard, Citizen
 main: com.nisovin.shopkeepers.SKShopkeepersPlugin
 api-version: '1.21.11'
 
-commands:
-    shopkeeper:
-        description: Base for all shopkeeper commands.
-        aliases: [shopkeepers]
-        usage: 'Unknown command! Try /<command> help'
+# Commands are registered via Brigadier Command API (Paper plugin structure)
+# See paper-plugin.yml for Paper plugin configuration
 
 permissions:
     # Command permissions:

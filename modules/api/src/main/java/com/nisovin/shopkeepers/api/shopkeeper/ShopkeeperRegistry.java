@@ -270,7 +270,7 @@ public interface ShopkeeperRegistry {
 	public boolean isShopkeeper(Entity entity);
 
 	/**
-	 * Gets the shopkeeper that is represented by the given block (for example in case of sign
+	 * Gets the shopkeeper that is represented by the given sign block (for example in case of sign
 	 * shops).
 	 * <p>
 	 * The return value may only be accurate if the shopkeeper's {@link ShopObject} is currently
@@ -283,13 +283,13 @@ public interface ShopkeeperRegistry {
 	 * {@link #getShopkeepersAtLocation(Location)} instead.
 	 * 
 	 * @param block
-	 *            the block
+	 *            the sign block
 	 * @return the shopkeeper, or <code>null</code> if the given block is not a shopkeeper
 	 */
-	public @Nullable Shopkeeper getShopkeeperByBlock(Block block);
+	public @Nullable Shopkeeper getShopkeeperBySignBlock(Block block);
 
 	/**
-	 * Gets the shopkeeper that is represented by the block at the specified coordinates (for
+	 * Gets the shopkeeper that is represented by the sign block at the specified coordinates (for
 	 * example in the case of sign shops).
 	 * <p>
 	 * The return value may only be accurate if the shopkeeper's {@link ShopObject} is currently
@@ -311,7 +311,7 @@ public interface ShopkeeperRegistry {
 	 *            the block's z coordinate
 	 * @return the shopkeeper, or <code>null</code> if the specified block is not a shopkeeper
 	 */
-	public @Nullable Shopkeeper getShopkeeperByBlock(String worldName, int x, int y, int z);
+	public @Nullable Shopkeeper getShopkeeperBySignBlock(String worldName, int x, int y, int z);
 
 	/**
 	 * Checks if the given block is a shopkeeper.
@@ -319,7 +319,7 @@ public interface ShopkeeperRegistry {
 	 * @param block
 	 *            the block
 	 * @return <code>true</code> if the block is a shopkeeper
-	 * @see #getShopkeeperByBlock(Block)
+	 * @see #getShopkeeperBySignBlock(Block)
 	 */
 	public boolean isShopkeeper(Block block);
 }
