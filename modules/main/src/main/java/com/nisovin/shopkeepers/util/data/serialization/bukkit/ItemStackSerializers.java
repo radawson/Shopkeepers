@@ -19,7 +19,6 @@ import com.nisovin.shopkeepers.util.data.serialization.MissingDataException;
 import com.nisovin.shopkeepers.util.data.serialization.java.DataContainerSerializers;
 import com.nisovin.shopkeepers.util.data.serialization.java.NumberSerializers;
 import com.nisovin.shopkeepers.util.inventory.ItemStackComponentsData;
-import com.nisovin.shopkeepers.util.inventory.ItemUtils;
 import com.nisovin.shopkeepers.util.java.Validate;
 
 /**
@@ -129,14 +128,12 @@ public final class ItemStackSerializers {
 			// getKey instead of getKeyOrThrow: Compatible with both Spigot and Paper.
 			dataContainer.set(ID, RegistryUtils.getKeyOrThrow(value.getType()));
 			dataContainer.set(COUNT, value.getAmount());
-			// TODO: Saving the itemstack to get its data can result in an error if Minecraft finds
-			// the item data to be invalid. Example: Entity data component with missing "id".
-			// Ideally, we want to detect such issues early, e.g. when loading shopkeepers, and we
-			// want this to only affect the particular trade or shopkeeper and not prevent the
-			// saving of other data.
-			// However, it is unclear how the invalid item data can end up inside the shopkeeper in
-			// the first place: Loading the shopkeeper with the invalid data already fails, and the
-			// give command also already detects invalid data up-front.
+			// Get components data - this may return null if component serialization fails due to
+			// invalid data (e.g., entity component with missing "id"). This is handled gracefully
+			// by allowing the item stack to be saved without component data, which prevents
+			// serialization failures from blocking the save of other shopkeeper data.
+			// Invalid component data can occur due to data corruption or edge cases, and is now
+			// detected and handled during serialization rather than causing failures.
 			var componentsData = ItemStackComponentsData.of(value.copy());
 			dataContainer.set(COMPONENTS, componentsData); // Omitted if null
 			return dataContainer.serialize();

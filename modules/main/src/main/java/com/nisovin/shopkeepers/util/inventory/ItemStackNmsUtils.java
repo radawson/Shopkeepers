@@ -175,11 +175,17 @@ public final class ItemStackNmsUtils {
 
 	/**
 	 * Gets the item stack components data for the given item stack.
+	 * <p>
+	 * This method attempts to serialize the item stack using the codec. If the codec validation
+	 * fails due to invalid component data (e.g., entity components with missing "id"), this method
+	 * handles the error gracefully by returning <code>null</code> instead of throwing an exception.
+	 * This allows the item stack to still be saved with basic information (type, count) even if
+	 * component data cannot be serialized.
 	 * 
 	 * @param itemStack
 	 *            the item stack
-	 * @return the components data, or <code>null</code> if the item stack is empty or has no
-	 *         components
+	 * @return the components data, or <code>null</code> if the item stack is empty, has no
+	 *         components, or if component serialization fails due to invalid data
 	 */
 	public static @Nullable ItemStackComponentsData getItemStackComponentsData(
 			@ReadOnly ItemStack itemStack
@@ -190,7 +196,20 @@ public final class ItemStackNmsUtils {
 		}
 
 		var nmsItem = asNMSItemStack(itemStack);
-		var itemTag = getItemStackTag(nmsItem);
+		
+		// Try to serialize the item stack using the codec
+		// If this fails due to invalid component data, we handle it gracefully
+		CompoundTag itemTag;
+		try {
+			itemTag = getItemStackTag(nmsItem);
+		} catch (Exception e) {
+			// Codec validation failed - likely due to invalid component data (e.g., entity
+			// component with missing "id")
+			// Log the error but don't throw - this allows the item stack to be saved without
+			// component data
+			Log.debug("Failed to serialize item stack components (invalid component data): " + e.getMessage());
+			return null;
+		}
 
 		var componentsTag = (CompoundTag) itemTag.get("components");
 		if (componentsTag == null) {
