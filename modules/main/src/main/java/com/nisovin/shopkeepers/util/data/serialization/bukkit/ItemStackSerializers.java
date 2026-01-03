@@ -6,7 +6,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
 import com.nisovin.shopkeepers.api.util.UnmodifiableItemStack;
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.util.inventory.ItemStackNmsUtils;
 import com.nisovin.shopkeepers.util.bukkit.DataUtils;
 import com.nisovin.shopkeepers.util.bukkit.RegistryUtils;
 import com.nisovin.shopkeepers.util.bukkit.ServerUtils;
@@ -92,7 +92,7 @@ public final class ItemStackSerializers {
 
 					@Nullable ItemStack itemStack;
 					try {
-						itemStack = Compat.getProvider()
+						itemStack = ItemStackNmsUtils
 								.deserializeItemStack(dataVersion, id, count, componentsData);
 					} catch (Exception e) {
 						throw new InvalidDataException("Failed to deserialize ItemStack!", e);
@@ -137,7 +137,7 @@ public final class ItemStackSerializers {
 			// However, it is unclear how the invalid item data can end up inside the shopkeeper in
 			// the first place: Loading the shopkeeper with the invalid data already fails, and the
 			// give command also already detects invalid data up-front.
-			var componentsData = ItemStackComponentsData.of(ItemUtils.asItemStack(value));
+			var componentsData = ItemStackComponentsData.of(value.copy());
 			dataContainer.set(COMPONENTS, componentsData); // Omitted if null
 			return dataContainer.serialize();
 		}

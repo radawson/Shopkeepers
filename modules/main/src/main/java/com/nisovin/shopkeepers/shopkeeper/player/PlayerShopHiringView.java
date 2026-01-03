@@ -61,7 +61,7 @@ public class PlayerShopHiringView extends HiringView {
 		UnmodifiableItemStack hireCost = shopkeeper.getHireCost();
 		if (hireCost != null) {
 			// Inventory#setItem copies the item, so we do not need to copy it ourselves here.
-			inventory.setItem(HIRE_COST_SLOT, ItemUtils.asItemStack(hireCost));
+			inventory.setItem(HIRE_COST_SLOT, hireCost.copy());
 		}
 	}
 

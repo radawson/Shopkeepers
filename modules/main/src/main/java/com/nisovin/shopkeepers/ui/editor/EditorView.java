@@ -311,9 +311,9 @@ public abstract class EditorView extends View {
 		// The inventory implementations create NMS copies of the items, so we do not need to copy
 		// them ourselves here:
 		var layout = this.getLayout();
-		inventory.setItem(layout.getResultItemSlot(column), ItemUtils.asItemStackOrNull(resultItem));
-		inventory.setItem(layout.getItem1Slot(column), ItemUtils.asItemStackOrNull(item1));
-		inventory.setItem(layout.getItem2Slot(column), ItemUtils.asItemStackOrNull(item2));
+		inventory.setItem(layout.getResultItemSlot(column), resultItem != null ? resultItem.copy() : null);
+		inventory.setItem(layout.getItem1Slot(column), item1 != null ? item1.copy() : null);
+		inventory.setItem(layout.getItem2Slot(column), item2 != null ? item2.copy() : null);
 	}
 
 	// TODO Avoid creating new TradingRecipeDraft objects here and instead update the drafts of the

@@ -41,7 +41,7 @@ public class ItemUpdates {
 		if (!updateItemEvent.isItemAltered()) return item;
 
 		// Item copy to ensure the item data is immutable:
-		return ItemUtils.nonNullUnmodifiableClone(ItemUtils.asItemStack(updateItemEvent.getItem()));
+		return ItemUtils.nonNullUnmodifiableClone(updateItemEvent.getItem().copy());
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class ItemUpdates {
 		if (!updateItemEvent.isItemAltered()) return itemData;
 
 		// Item copy to ensure the item data is immutable:
-		return new ItemData(ItemUtils.asItemStack(updateItemEvent.getItem()));
+		return new ItemData(updateItemEvent.getItem().copy());
 	}
 
 	private ItemUpdates() {

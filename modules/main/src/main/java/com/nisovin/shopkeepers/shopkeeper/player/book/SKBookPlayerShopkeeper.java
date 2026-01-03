@@ -264,7 +264,7 @@ public class SKBookPlayerShopkeeper
 	@Override
 	public @Nullable BookOffer getOffer(UnmodifiableItemStack bookItem) {
 		Validate.notNull(bookItem, "bookItem is null");
-		return this.getOffer(ItemUtils.asItemStack(bookItem));
+		return this.getOffer(bookItem.copy());
 	}
 
 	@Override

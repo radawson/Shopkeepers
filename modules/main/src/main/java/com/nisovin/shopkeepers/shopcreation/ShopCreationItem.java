@@ -52,7 +52,7 @@ public final class ShopCreationItem {
 	}
 
 	public static boolean isShopCreationItem(@Nullable UnmodifiableItemStack itemStack) {
-		return isShopCreationItem(ItemUtils.asItemStackOrNull(itemStack));
+		return isShopCreationItem(itemStack != null ? itemStack.copy() : null);
 	}
 
 	public static boolean isShopCreationItem(@ReadOnly @Nullable ItemStack itemStack) {

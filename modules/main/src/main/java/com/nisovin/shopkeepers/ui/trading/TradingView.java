@@ -30,7 +30,7 @@ import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 import com.nisovin.shopkeepers.api.shopkeeper.TradingRecipe;
 import com.nisovin.shopkeepers.api.trading.TradeEffect;
 import com.nisovin.shopkeepers.api.util.UnmodifiableItemStack;
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.util.inventory.ItemStackNmsUtils;
 import com.nisovin.shopkeepers.config.Settings;
 import com.nisovin.shopkeepers.currency.Currencies;
 import com.nisovin.shopkeepers.currency.Currency;
@@ -104,7 +104,7 @@ public class TradingView extends View {
 
 		// Open merchant:
 		var menuBuilder = MenuType.MERCHANT.builder();
-		Compat.getProvider().setInventoryViewTitle(menuBuilder, title);
+		MerchantUtils.setInventoryViewTitle(menuBuilder, title);
 		var inventoryView = menuBuilder.merchant(merchant).build(player);
 		player.openInventory(inventoryView);
 		return inventoryView;
@@ -181,7 +181,7 @@ public class TradingView extends View {
 		merchant.setRecipes(newMerchantRecipes);
 
 		// Update recipes for the client:
-		Compat.getProvider().updateTrades(player);
+		MerchantUtils.updateTrades(player);
 	}
 
 	// Dynamically modifying trades (e.g. their blocked state, or properties such as their items),
@@ -382,7 +382,7 @@ public class TradingView extends View {
 				if (!resultItemEmpty) {
 					assert resultItem != null;
 
-					if (!this.canSlotHoldItemStack(cursor, ItemUtils.asItemStack(resultItem))) {
+					if (!this.canSlotHoldItemStack(cursor, resultItem.copy())) {
 						Log.debug(() -> this.getContext().getLogPrefix()
 								+ "Not handling trade: The cursor cannot hold the result items.");
 						this.onTradeAborted(tradingContext, false);
@@ -404,7 +404,7 @@ public class TradingView extends View {
 					ItemStack resultCursor;
 					if (isCursorEmpty) {
 						// No item copy required here: setItemOnCursor copies the item.
-						resultCursor = ItemUtils.asItemStack(resultItem);
+						resultCursor = resultItem.copy();
 					} else {
 						resultCursor = ItemUtils.increaseItemAmount(cursor, resultItem.getAmount());
 					}
@@ -462,7 +462,7 @@ public class TradingView extends View {
 
 						// Set the result items to the hotbar slot:
 						// No item copy required here.
-						playerInventory.setItem(hotbarButton, ItemUtils.asItemStack(resultItem));
+						playerInventory.setItem(hotbarButton, resultItem.copy());
 					}
 
 					// Common apply trade:
@@ -764,8 +764,12 @@ public class TradingView extends View {
 		int requiredItem2Amount = ItemUtils.getItemStackAmount(requiredItem2);
 		return (offeredItem1Amount >= requiredItem1Amount
 				&& offeredItem2Amount >= requiredItem2Amount
-				&& Compat.getProvider().matches(offeredItem1, requiredItem1)
-				&& Compat.getProvider().matches(offeredItem2, requiredItem2));
+				&& ItemStackNmsUtils.matches(
+						offeredItem1,
+						requiredItem1 != null ? requiredItem1.copy() : null)
+				&& ItemStackNmsUtils.matches(
+						offeredItem2,
+						requiredItem2 != null ? requiredItem2.copy() : null));
 	}
 
 	protected final void debugPreventedTrade(String reason) {
@@ -1086,7 +1090,7 @@ public class TradingView extends View {
 			String itemStackName,
 			@Nullable UnmodifiableItemStack itemStack
 	) {
-		debugLogItemStack(itemStackName, ItemUtils.asItemStackOrNull(itemStack));
+		debugLogItemStack(itemStackName, itemStack != null ? itemStack.copy() : null);
 	}
 
 	private static void debugLogItemStack(

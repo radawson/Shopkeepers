@@ -277,7 +277,7 @@ public final class PlaceholderItems {
 	public static @PolyNull UnmodifiableItemStack replace(
 			@PolyNull UnmodifiableItemStack itemStack
 	) {
-		return UnmodifiableItemStack.of(replace(ItemUtils.asItemStackOrNull(itemStack)));
+		return UnmodifiableItemStack.of(replace(itemStack != null ? itemStack.copy() : null));
 	}
 
 	/**

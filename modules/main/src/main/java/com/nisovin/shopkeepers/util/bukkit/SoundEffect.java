@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.util.bukkit.RegistryUtils;
 import com.nisovin.shopkeepers.util.data.container.DataContainer;
 import com.nisovin.shopkeepers.util.data.property.BasicProperty;
 import com.nisovin.shopkeepers.util.data.property.Property;
@@ -128,7 +128,7 @@ public final class SoundEffect {
 			}
 
 			// Check if the sound name matches a known Sound:
-			var soundRegistry = Compat.getProvider().getRegistry(Sound.class);
+			var soundRegistry = RegistryUtils.getRegistry(Sound.class);
 			NamespacedKey soundKey = NamespacedKeyUtils.parse(soundName);
 			Sound sound = soundKey != null ? soundRegistry.get(soundKey) : null;
 			if (sound != null) {

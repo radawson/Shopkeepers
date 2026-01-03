@@ -5,7 +5,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
-import com.nisovin.shopkeepers.compat.Compat;
 import com.nisovin.shopkeepers.util.annotations.ReadOnly;
 import com.nisovin.shopkeepers.util.data.container.DataContainer;
 import com.nisovin.shopkeepers.util.data.container.DelegateDataContainer;
@@ -32,7 +31,7 @@ public final class ItemStackComponentsData extends DelegateDataContainer {
 	 *         components data
 	 */
 	public static @Nullable ItemStackComponentsData of(@ReadOnly ItemStack itemStack) {
-		return Compat.getProvider().getItemStackComponentsData(itemStack);
+		return ItemStackNmsUtils.getItemStackComponentsData(itemStack);
 	}
 
 	/**

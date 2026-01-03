@@ -39,7 +39,7 @@ public final class ItemMigration {
 	public static @Nullable UnmodifiableItemStack migrateItemStack(
 			@Nullable UnmodifiableItemStack itemStack
 	) {
-		return UnmodifiableItemStack.of(migrateItemStack(ItemUtils.asItemStackOrNull(itemStack)));
+		return UnmodifiableItemStack.of(migrateItemStack(itemStack != null ? itemStack.copy() : null));
 	}
 
 	public static ItemStack migrateNonNullItemStack(@ReadOnly ItemStack itemStack) {

@@ -27,7 +27,8 @@ import com.nisovin.shopkeepers.api.shopkeeper.ShopCreationData;
 import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 import com.nisovin.shopkeepers.api.shopobjects.living.LivingShopEquipment;
 import com.nisovin.shopkeepers.api.shopobjects.living.LivingShopObject;
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.api.util.UnmodifiableItemStack;
+import com.nisovin.shopkeepers.util.bukkit.EntityNmsUtils;
 import com.nisovin.shopkeepers.config.Settings;
 import com.nisovin.shopkeepers.debug.DebugOptions;
 import com.nisovin.shopkeepers.items.ItemUpdates;
@@ -212,7 +213,7 @@ public class SKLivingShopObject<E extends LivingEntity>
 		entity.setCollidable(false);
 		// TODO Only required to handle the 'look-at-nearby-player' behavior. Maybe replace this
 		// with something own?
-		Compat.getProvider().overwriteLivingEntityAI(entity);
+		EntityNmsUtils.overwriteLivingEntityAI(entity);
 
 		// Disable AI (also disables gravity) and replace it with our own handling:
 		this.setNoAI(entity);
@@ -233,7 +234,7 @@ public class SKLivingShopObject<E extends LivingEntity>
 		// Note: For flying mobs, the EntityAI will reset this flag back to false every few ticks to
 		// play their flying animation.
 		// TODO This can be removed once Spigot ignores NoAI entities.
-		Compat.getProvider().setOnGround(entity, true);
+		EntityNmsUtils.setOnGround(entity, true);
 	}
 
 	// TICKING
@@ -256,7 +257,7 @@ public class SKLivingShopObject<E extends LivingEntity>
 		// In order to compensate for a reduced tick rate, we invoke the AI multiple times.
 		// Otherwise, the entity would turn its head more slowly and track the player for an
 		// increased duration.
-		Compat.getProvider().tickAI(entity, Settings.entityBehaviorTickPeriod);
+		EntityNmsUtils.tickAI(entity, Settings.entityBehaviorTickPeriod);
 	}
 
 	// POTION EFFECTS
@@ -415,7 +416,8 @@ public class SKLivingShopObject<E extends LivingEntity>
 		// Iterate over all equipment slots, to also clear any no longer equipped slots:
 		for (EquipmentSlot slot : EquipmentUtils.EQUIPMENT_SLOTS) {
 			// No item copy required: Setting the equipment copies the item internally.
-			@Nullable ItemStack item = ItemUtils.asItemStackOrNull(shopEquipment.getItem(slot));
+			@Nullable UnmodifiableItemStack equipmentItem = shopEquipment.getItem(slot);
+			@Nullable ItemStack item = equipmentItem != null ? equipmentItem.copy() : null;
 			this.setEquipment(entityEquipment, slot, item);
 		}
 	}

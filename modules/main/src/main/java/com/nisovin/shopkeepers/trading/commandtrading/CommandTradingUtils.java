@@ -115,6 +115,6 @@ public final class CommandTradingUtils {
 	 * @return the traded command, or <code>null</code> if no traded command is set.
 	 */
 	public static @Nullable String getTradedCommand(@Nullable UnmodifiableItemStack itemStack) {
-		return getTradedCommand(ItemUtils.asItemStackOrNull(itemStack));
+		return getTradedCommand(itemStack != null ? itemStack.copy() : null);
 	}
 }

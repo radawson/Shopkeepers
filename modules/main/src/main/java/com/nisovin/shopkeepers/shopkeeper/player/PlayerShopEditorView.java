@@ -72,7 +72,7 @@ public abstract class PlayerShopEditorView extends ShopkeeperEditorView {
 		// Update item in inventory:
 		if (newItemAmount == 0) {
 			// Place empty slot item:
-			event.setCurrentItem(ItemUtils.asItemStackOrNull(emptySlotItem));
+			event.setCurrentItem(emptySlotItem != null ? emptySlotItem.copy() : null);
 			return null;
 		} else {
 			clickedItem.setAmount(newItemAmount);
@@ -111,7 +111,7 @@ public abstract class PlayerShopEditorView extends ShopkeeperEditorView {
 		// Update item in inventory:
 		if (newItemAmount == 0) {
 			// Place empty slot item:
-			event.setCurrentItem(ItemUtils.asItemStackOrNull(emptySlotItem));
+			event.setCurrentItem(emptySlotItem != null ? emptySlotItem.copy() : null);
 		} else {
 			if (isCurrencyItem) {
 				assert clickedItem != null;

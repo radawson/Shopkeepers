@@ -55,7 +55,7 @@ public final class BookItems {
 	 * @return the book meta, or <code>null</code> if the given item stack is not a written book
 	 */
 	public static @Nullable BookMeta getBookMeta(@Nullable UnmodifiableItemStack itemStack) {
-		return getBookMeta(ItemUtils.asItemStackOrNull(itemStack));
+		return getBookMeta(itemStack != null ? itemStack.copy() : null);
 	}
 
 	// BOOK TITLE

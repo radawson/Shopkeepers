@@ -3,9 +3,19 @@ package com.nisovin.shopkeepers.util.bukkit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.craftbukkit.entity.CraftAbstractVillager;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftVillager;
+import org.bukkit.craftbukkit.inventory.CraftMerchant;
+import org.bukkit.entity.AbstractVillager;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.inventory.view.builder.InventoryViewBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
@@ -15,6 +25,10 @@ import com.nisovin.shopkeepers.shopkeeper.SKTradingRecipe;
 import com.nisovin.shopkeepers.shopkeeper.TradingRecipeDraft;
 import com.nisovin.shopkeepers.util.inventory.ItemUtils;
 import com.nisovin.shopkeepers.util.java.Validate;
+
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.trading.MerchantOffers;
 
 /**
  * Utilities related to merchants and trading.
@@ -113,9 +127,9 @@ public final class MerchantUtils {
 		// No max-uses limit
 		MerchantRecipe merchantRecipe = new MerchantRecipe(resultItem.copy(), Integer.MAX_VALUE);
 		merchantRecipe.setExperienceReward(false); // No experience rewards
-		merchantRecipe.addIngredient(ItemUtils.asItemStack(buyItem1));
+		merchantRecipe.addIngredient(buyItem1.copy());
 		if (buyItem2 != null) {
-			merchantRecipe.addIngredient(ItemUtils.asItemStack(buyItem2));
+			merchantRecipe.addIngredient(buyItem2.copy());
 		}
 		return merchantRecipe;
 	}
@@ -210,6 +224,79 @@ public final class MerchantUtils {
 			return true;
 		}
 	};
+
+	/**
+	 * Sets the title of an inventory view builder using Paper's Component API.
+	 * 
+	 * @param builder
+	 *            the inventory view builder
+	 * @param title
+	 *            the title as a legacy string
+	 */
+	public static void setInventoryViewTitle(InventoryViewBuilder<?> builder, String title) {
+		var titleComponent = LegacyComponentSerializer.legacySection().deserialize(title);
+		builder.title(titleComponent);
+	}
+
+	/**
+	 * Updates the trades displayed to the player in their open merchant inventory.
+	 * <p>
+	 * This sends the updated merchant offers packet to the client, which updates the displayed
+	 * trades, including the result item.
+	 * 
+	 * @param player
+	 *            the player whose merchant inventory should be updated
+	 */
+	public static void updateTrades(Player player) {
+		Inventory openInventory = player.getOpenInventory().getTopInventory();
+		if (!(openInventory instanceof MerchantInventory)) {
+			return;
+		}
+		MerchantInventory merchantInventory = (MerchantInventory) openInventory;
+
+		// Update the merchant inventory on the server (updates the result item, etc.):
+		merchantInventory.setItem(0, merchantInventory.getItem(0));
+
+		Merchant merchant = merchantInventory.getMerchant();
+		net.minecraft.world.item.trading.Merchant nmsMerchant;
+		boolean regularVillager = false;
+		boolean canRestock = false;
+		// Note: When using the 'is-regular-villager'-flag, using level 0 allows hiding the level
+		// name suffix.
+		int merchantLevel = 1;
+		int merchantExperience = 0;
+		if (merchant instanceof Villager) {
+			nmsMerchant = ((CraftVillager) merchant).getHandle();
+			Villager villager = (Villager) merchant;
+			regularVillager = true;
+			canRestock = true;
+			merchantLevel = villager.getVillagerLevel();
+			merchantExperience = villager.getVillagerExperience();
+		} else if (merchant instanceof AbstractVillager) {
+			nmsMerchant = ((CraftAbstractVillager) merchant).getHandle();
+		} else {
+			nmsMerchant = ((CraftMerchant) merchant).getMerchant();
+			merchantLevel = 0; // Hide name suffix
+		}
+		MerchantOffers merchantRecipeList = nmsMerchant.getOffers();
+		if (merchantRecipeList == null) {
+			// Just in case:
+			merchantRecipeList = new MerchantOffers();
+		}
+
+		// Send PacketPlayOutOpenWindowMerchant packet: window id, recipe list, merchant level (1:
+		// Novice, .., 5: Master), merchant total experience, is-regular-villager flag (false: hides
+		// some gui elements), can-restock flag (false: hides restock message if out of stock)
+		ServerPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
+		nmsPlayer.sendMerchantOffers(
+				nmsPlayer.containerMenu.containerId,
+				merchantRecipeList,
+				merchantLevel,
+				merchantExperience,
+				regularVillager,
+				canRestock
+		);
+	}
 
 	private MerchantUtils() {
 	}

@@ -87,7 +87,7 @@ public class EndermanShop extends SKLivingShopObject<Enderman> {
 			// We need to check if the item is a placeholder item first, because the placeholder
 			// item might be configured to be a block type itself.
 			@Nullable Material substitutedMaterial = PlaceholderItems.getSubstitutedMaterial(
-					ItemUtils.asItemStack(item)
+					item.copy()
 			);
 			if (substitutedMaterial != null && substitutedMaterial.isBlock()) {
 				blockType = substitutedMaterial;

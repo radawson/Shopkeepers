@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.util.bukkit.RegistryUtils;
 import com.nisovin.shopkeepers.util.bukkit.NamespacedKeyUtils;
 import com.nisovin.shopkeepers.util.java.ConversionUtils;
 import com.nisovin.shopkeepers.util.java.Validate;
@@ -68,7 +68,7 @@ public final class EnchantmentUtils {
 		}
 
 		// Lookup by key:
-		return Compat.getProvider().getRegistry(Enchantment.class).get(namespacedKey);
+		return RegistryUtils.getRegistry(Enchantment.class).get(namespacedKey);
 	}
 
 	/**

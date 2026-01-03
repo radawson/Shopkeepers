@@ -27,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import com.nisovin.shopkeepers.SKShopkeepersPlugin;
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
 import com.nisovin.shopkeepers.api.util.ChunkCoords;
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.util.bukkit.EntityNmsUtils;
 import com.nisovin.shopkeepers.config.Settings;
 import com.nisovin.shopkeepers.util.bukkit.EntityUtils;
 import com.nisovin.shopkeepers.util.bukkit.MutableChunkCoords;
@@ -628,7 +628,7 @@ public class EntityAI implements Listener {
 	// The result of this check is cached on plugin enable.
 	private boolean _isCustomGravityEnabled() {
 		// Gravity is enabled and not already handled by Minecraft itself:
-		return !Settings.disableGravity && Compat.getProvider().isNoAIDisablingGravity();
+		return !Settings.disableGravity && EntityNmsUtils.isNoAIDisablingGravity();
 	}
 
 	private void processGravity(EntityData entityData) {
@@ -682,19 +682,19 @@ public class EntityAI implements Listener {
 			if (isInAir && !falling) {
 				// The entity is flying.
 				// Required for flying mobs to play their flying animation.
-				Compat.getProvider().setOnGround(entity, false);
+				EntityNmsUtils.setOnGround(entity, false);
 			} else {
 				if (falling) {
 					// Tick falling:
 					// Prevents SPIGOT-3948 / MC-130725
-					Compat.getProvider().setOnGround(entity, false);
+					EntityNmsUtils.setOnGround(entity, false);
 					this.tickFalling(entityData);
 				}
 
 				if (!entityData.falling) {
 					// No longer falling (and also not flying):
 					// Prevents SPIGOT-3948 / MC-130725
-					Compat.getProvider().setOnGround(entity, true);
+					EntityNmsUtils.setOnGround(entity, true);
 				}
 			}
 		}

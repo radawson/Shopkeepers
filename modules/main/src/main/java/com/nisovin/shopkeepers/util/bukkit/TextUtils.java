@@ -594,7 +594,7 @@ public final class TextUtils {
 	}
 
 	public static Text getItemText(@Nullable UnmodifiableItemStack itemStack) {
-		return getItemText(ItemUtils.asItemStackOrNull(itemStack));
+		return getItemText(itemStack != null ? itemStack.copy() : null);
 	}
 
 	public static Text getItemText(@ReadOnly @Nullable ItemStack itemStack) {

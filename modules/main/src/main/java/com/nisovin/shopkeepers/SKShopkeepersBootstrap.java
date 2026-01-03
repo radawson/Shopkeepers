@@ -4,7 +4,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.nisovin.shopkeepers.api.internal.InternalShopkeepersAPI;
-import com.nisovin.shopkeepers.compat.Compat;
 import com.nisovin.shopkeepers.config.Settings;
 import com.nisovin.shopkeepers.dependencies.worldguard.WorldGuardDependency;
 import com.nisovin.shopkeepers.lang.Messages;

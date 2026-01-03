@@ -51,7 +51,7 @@ public class VillagerEquipmentEditorUIState extends EquipmentEditorUIState {
 					var entityEquipment = Unsafe.assertNonNull(villager.getEquipment());
 
 					// This copies the item internally:
-					entityEquipment.setItem(slot, ItemUtils.asItemStackOrNull(item));
+					entityEquipment.setItem(slot, item != null ? item.copy() : null);
 				}
 		);
 	}

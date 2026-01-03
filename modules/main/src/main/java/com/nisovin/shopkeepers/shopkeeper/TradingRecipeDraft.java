@@ -174,9 +174,9 @@ public class TradingRecipeDraft {
 			@Nullable UnmodifiableItemStack item2
 	) {
 		return this.areItemsEqual(
-				ItemUtils.asItemStackOrNull(resultItem),
-				ItemUtils.asItemStackOrNull(item1),
-				ItemUtils.asItemStackOrNull(item2)
+				resultItem != null ? resultItem.copy() : null,
+				item1 != null ? item1.copy() : null,
+				item2 != null ? item2.copy() : null
 		);
 	}
 

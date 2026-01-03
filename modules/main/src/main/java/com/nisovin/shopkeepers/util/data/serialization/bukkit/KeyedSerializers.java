@@ -6,7 +6,7 @@ import org.bukkit.Registry;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.util.bukkit.RegistryUtils;
 import com.nisovin.shopkeepers.util.data.serialization.DataSerializer;
 import com.nisovin.shopkeepers.util.data.serialization.InvalidDataException;
 import com.nisovin.shopkeepers.util.java.Validate;
@@ -100,7 +100,7 @@ public final class KeyedSerializers {
 	public static <E extends Keyed> DataSerializer<@NonNull E> forRegistry(
 			Class<@NonNull E> keyedType
 	) {
-		var registry = Compat.getProvider().getRegistry(keyedType);
+		var registry = RegistryUtils.getRegistry(keyedType);
 		return forResolver(keyedType, (key) -> registry.get(key));
 	}
 

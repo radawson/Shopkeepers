@@ -38,7 +38,7 @@ public class SellingPlayerShopEditorViewProvider extends PlayerShopEditorViewPro
 			// With heuristic initial capacity:
 			List<TradingRecipeDraft> recipes = new ArrayList<>(offers.size() + 8);
 			offers.forEach(offer -> {
-				ItemStack tradedItem = ItemUtils.asItemStack(offer.getItem());
+				ItemStack tradedItem = offer.getItem().copy();
 				TradingRecipeDraft recipe = createTradingRecipeDraft(tradedItem, offer.getPrice());
 				recipes.add(recipe);
 			});

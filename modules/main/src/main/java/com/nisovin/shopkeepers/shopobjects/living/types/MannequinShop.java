@@ -17,7 +17,7 @@ import com.nisovin.shopkeepers.SKShopkeepersPlugin;
 import com.nisovin.shopkeepers.api.events.ShopkeeperEditedEvent;
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
 import com.nisovin.shopkeepers.api.shopkeeper.ShopCreationData;
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.util.bukkit.EntityNmsUtils;
 import com.nisovin.shopkeepers.input.InputRequest;
 import com.nisovin.shopkeepers.lang.Messages;
 import com.nisovin.shopkeepers.shopkeeper.AbstractShopkeeper;
@@ -130,7 +130,7 @@ public class MannequinShop extends SKLivingShopObject<LivingEntity> {
 		LivingEntity entity = this.getEntity();
 		if (entity == null) return; // Not spawned
 
-		Compat.getProvider().setMannequinHideDescription(entity, true);
+		EntityNmsUtils.setMannequinHideDescription(entity, true);
 	}
 
 	// MAIN HAND
@@ -155,7 +155,7 @@ public class MannequinShop extends SKLivingShopObject<LivingEntity> {
 		LivingEntity entity = this.getEntity();
 		if (entity == null) return; // Not spawned
 
-		Compat.getProvider().setMannequinMainHand(entity, this.getMainHand());
+		EntityNmsUtils.setMannequinMainHand(entity, this.getMainHand());
 	}
 
 	private ItemStack getMainHandEditorItem() {
@@ -209,7 +209,7 @@ public class MannequinShop extends SKLivingShopObject<LivingEntity> {
 		LivingEntity entity = this.getEntity();
 		if (entity == null) return; // Not spawned
 
-		Compat.getProvider().setMannequinPose(entity, this.getPose());
+		EntityNmsUtils.setMannequinPose(entity, this.getPose());
 	}
 
 	private ItemStack getPoseEditorItem() {
@@ -252,7 +252,7 @@ public class MannequinShop extends SKLivingShopObject<LivingEntity> {
 		LivingEntity entity = this.getEntity();
 		if (entity == null) return; // Not spawned
 
-		Compat.getProvider().setMannequinProfile(entity, this.getProfile());
+		EntityNmsUtils.setMannequinProfile(entity, this.getProfile());
 	}
 
 	private ItemStack getProfileEditorItem() {
@@ -313,7 +313,8 @@ public class MannequinShop extends SKLivingShopObject<LivingEntity> {
 
 		// We support both name and uuid lookups:
 		var uuid = ConversionUtils.parseUUID(preparedInput);
-		if (uuid == null && !Compat.getProvider().getCompatVersion().isPaper()) {
+		if (uuid == null) {
+			// Paper 1.21.11+ - always use Paper APIs
 			// TODO Workaround for SPIGOT-8088: Lookup the player id via OfflinePlayer (blocking!)
 			var offlinePlayer = Bukkit.getOfflinePlayer(preparedInput);
 			uuid = offlinePlayer.getUniqueId(); // Potentially a non-existent offline uuid

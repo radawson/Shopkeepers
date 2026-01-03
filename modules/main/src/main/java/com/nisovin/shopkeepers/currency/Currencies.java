@@ -106,7 +106,7 @@ public final class Currencies {
 	}
 
 	public static @Nullable Currency match(@Nullable UnmodifiableItemStack itemStack) {
-		return match(ItemUtils.asItemStackOrNull(itemStack));
+		return match(itemStack != null ? itemStack.copy() : null);
 	}
 
 	public static boolean matchesAny(@ReadOnly @Nullable ItemStack itemStack) {
@@ -114,7 +114,7 @@ public final class Currencies {
 	}
 
 	public static boolean matchesAny(@Nullable UnmodifiableItemStack itemStack) {
-		return matchesAny(ItemUtils.asItemStackOrNull(itemStack));
+		return matchesAny(itemStack != null ? itemStack.copy() : null);
 	}
 
 	public static Currency getBase() {

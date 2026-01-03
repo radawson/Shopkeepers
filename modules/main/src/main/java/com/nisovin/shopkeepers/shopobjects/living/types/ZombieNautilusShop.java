@@ -15,7 +15,7 @@ import com.nisovin.shopkeepers.api.internal.util.Unsafe;
 import com.nisovin.shopkeepers.api.shopkeeper.ShopCreationData;
 import com.nisovin.shopkeepers.api.shopobjects.living.LivingShopEquipment;
 import com.nisovin.shopkeepers.api.util.UnmodifiableItemStack;
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.util.bukkit.EntityNmsUtils;
 import com.nisovin.shopkeepers.lang.Messages;
 import com.nisovin.shopkeepers.shopkeeper.AbstractShopkeeper;
 import com.nisovin.shopkeepers.shopobjects.ShopObjectData;
@@ -180,14 +180,14 @@ public class ZombieNautilusShop extends SKLivingShopObject<Tameable> {
 	}
 
 	public void cycleVariant(boolean backwards) {
-		this.setVariant(Compat.getProvider().cycleZombieNautilusVariant(this.getVariant(), backwards));
+		this.setVariant(EntityNmsUtils.cycleZombieNautilusVariant(this.getVariant(), backwards));
 	}
 
 	private void applyVariant() {
 		LivingEntity entity = this.getEntity();
 		if (entity == null) return; // Not spawned
 
-		Compat.getProvider().setZombieNautilusVariant(entity, this.getVariant());
+		EntityNmsUtils.setZombieNautilusVariant(entity, this.getVariant());
 	}
 
 	private static final NamespacedKey VARIANT_WARM = NamespacedKey.minecraft("warm");

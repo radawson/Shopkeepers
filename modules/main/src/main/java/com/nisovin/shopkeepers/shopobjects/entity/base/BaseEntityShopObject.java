@@ -21,7 +21,7 @@ import com.nisovin.shopkeepers.api.internal.util.Unsafe;
 import com.nisovin.shopkeepers.api.shopkeeper.ShopCreationData;
 import com.nisovin.shopkeepers.api.shopobjects.entity.EntityShopObject;
 import com.nisovin.shopkeepers.api.util.ChunkCoords;
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.util.bukkit.EntityNmsUtils;
 import com.nisovin.shopkeepers.config.Settings;
 import com.nisovin.shopkeepers.debug.DebugOptions;
 import com.nisovin.shopkeepers.debug.events.DebugListener;
@@ -234,7 +234,7 @@ public abstract class BaseEntityShopObject<E extends Entity>
 		this.applySubtypeAttributes(entity);
 
 		// Any version-specific preparation:
-		Compat.getProvider().prepareEntity(entity);
+		EntityNmsUtils.prepareEntity(entity);
 	}
 
 	/**
@@ -336,7 +336,7 @@ public abstract class BaseEntityShopObject<E extends Entity>
 			entity.setInvulnerable(true);
 
 			// Any version-specific setup:
-			Compat.getProvider().setupSpawnedEntity(entity);
+			EntityNmsUtils.setupSpawnedEntity(entity);
 
 			// Overwrite AI:
 			this.overwriteAI();
@@ -440,7 +440,7 @@ public abstract class BaseEntityShopObject<E extends Entity>
 			// disable their noclip again after their movement.
 			// TODO Still required? Bukkit's setCollidable API might actually work now.
 			// But this might also provide a small performance benefit.
-			Compat.getProvider().setNoclip(entity);
+			EntityNmsUtils.setNoclip(entity);
 		}
 	}
 
@@ -449,7 +449,7 @@ public abstract class BaseEntityShopObject<E extends Entity>
 
 		// Making sure that Spigot's entity activation range does not keep this entity ticking,
 		// because it assumes that it is currently falling:
-		Compat.getProvider().setOnGround(entity, true);
+		EntityNmsUtils.setOnGround(entity, true);
 	}
 
 	protected void cleanupAI() {

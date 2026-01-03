@@ -286,7 +286,7 @@ public final class SpigotText {
 				var content = new net.md_5.bungee.api.chat.hover.content.Text(value);
 				return new net.md_5.bungee.api.chat.HoverEvent(action, content);
 			} else if (hoverEventContent instanceof ItemContent itemContent) {
-				var item = ItemUtils.asItemStack(itemContent.getItem());
+				var item = itemContent.getItem().copy();
 				// TODO https://github.com/SpigotMC/BungeeCord/issues/3688: Component data is
 				// not supported currently.
 				var action = net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_ITEM;

@@ -19,7 +19,7 @@ import org.bukkit.potion.PotionType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.nisovin.shopkeepers.api.internal.util.Unsafe;
-import com.nisovin.shopkeepers.compat.Compat;
+import com.nisovin.shopkeepers.util.bukkit.RegistryUtils;
 import com.nisovin.shopkeepers.util.annotations.ReadWrite;
 import com.nisovin.shopkeepers.util.bukkit.MinecraftEnumUtils;
 import com.nisovin.shopkeepers.util.bukkit.NamespacedKeyUtils;
@@ -215,7 +215,7 @@ public final class PotionUtils {
 		if (key.getKey().startsWith("long_")) return potionType;
 		if (!potionType.isExtendable()) return null;
 
-		var potionRegistry = Compat.getProvider().getRegistry(PotionType.class);
+		var potionRegistry = RegistryUtils.getRegistry(PotionType.class);
 		return potionRegistry.get(NamespacedKeyUtils.create(key.getNamespace(), "long_" + key.getKey()));
 	}
 
@@ -224,7 +224,7 @@ public final class PotionUtils {
 		if (key.getKey().startsWith("strong_")) return potionType;
 		if (!potionType.isUpgradeable()) return null;
 
-		var potionRegistry = Compat.getProvider().getRegistry(PotionType.class);
+		var potionRegistry = RegistryUtils.getRegistry(PotionType.class);
 		return potionRegistry.get(NamespacedKeyUtils.create(key.getNamespace(), "strong_" + key.getKey()));
 	}
 

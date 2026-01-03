@@ -24,7 +24,6 @@ import com.nisovin.shopkeepers.api.internal.util.Unsafe;
 import com.nisovin.shopkeepers.api.shopkeeper.ShopCreationData;
 import com.nisovin.shopkeepers.api.shopkeeper.ShopType;
 import com.nisovin.shopkeepers.commands.Commands;
-import com.nisovin.shopkeepers.compat.Compat;
 import com.nisovin.shopkeepers.compat.MC_1_21_11;
 import com.nisovin.shopkeepers.compat.ServerAssumptionsTest;
 import com.nisovin.shopkeepers.config.Settings;
@@ -174,7 +173,6 @@ public class SKShopkeepersPlugin extends JavaPlugin implements InternalShopkeepe
 	private final PluginMetrics pluginMetrics = new PluginMetrics(Unsafe.initialized(this));
 
 	private boolean outdatedServer = false;
-	private boolean incompatibleServer = false;
 	private @Nullable ConfigLoadException configLoadError = null; // Null on success
 
 	private void loadAllPluginClasses() {
@@ -242,12 +240,7 @@ public class SKShopkeepersPlugin extends JavaPlugin implements InternalShopkeepe
 			return;
 		}
 
-		// Try to load the compat module: Returns false if neither a compatible compat provider nor
-		// the fallback provider could be loaded.
-		this.incompatibleServer = !Compat.load(this);
-		if (this.incompatibleServer) {
-			return;
-		}
+		// Compat module system removed - using direct NMS access for 1.21.11+
 
 		// Load config:
 		// Note: The config loading can already depend on Compat functionality (e.g. for item
@@ -297,12 +290,7 @@ public class SKShopkeepersPlugin extends JavaPlugin implements InternalShopkeepe
 			return;
 		}
 
-		// Check if the server version is incompatible:
-		if (this.incompatibleServer) {
-			Log.severe("Incompatible server version: Shopkeepers cannot be enabled.");
-			this.setEnabled(false); // Also calls onDisable
-			return;
-		}
+		// Server version compatibility is checked during onLoad
 
 		// Load config (if not already loaded during onLoad):
 		if (!alreadySetUp) {
@@ -326,8 +314,7 @@ public class SKShopkeepersPlugin extends JavaPlugin implements InternalShopkeepe
 		// Check for and initialize version dependent utilities:
 		MC_1_21_11.init();
 
-		// Compat module:
-		Compat.getProvider().onEnable();
+		// Compat module system removed - using direct NMS access for 1.21.11+
 
 		// Paper-only build - all Paper API features are available
 
@@ -535,10 +522,7 @@ public class SKShopkeepersPlugin extends JavaPlugin implements InternalShopkeepe
 		// Event debugger:
 		eventDebugger.onDisable();
 
-		// Compat module:
-		if (Compat.hasProvider()) {
-			Compat.getProvider().onDisable();
-		}
+		// Compat module system removed - using direct NMS access for 1.21.11+
 
 		HandlerList.unregisterAll(this);
 		Bukkit.getScheduler().cancelTasks(this);

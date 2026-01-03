@@ -190,7 +190,7 @@ public class SKSellingPlayerShopkeeper
 	@Override
 	public @Nullable PriceOffer getOffer(UnmodifiableItemStack tradedItem) {
 		Validate.notNull(tradedItem, "tradedItem is null");
-		return this.getOffer(ItemUtils.asItemStack(tradedItem));
+		return this.getOffer(tradedItem.copy());
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public class SKSellingPlayerShopkeeper
 	@Override
 	public void removeOffer(UnmodifiableItemStack tradedItem) {
 		Validate.notNull(tradedItem, "tradedItem is null");
-		this.removeOffer(ItemUtils.asItemStack(tradedItem));
+		this.removeOffer(tradedItem.copy());
 	}
 
 	@Override

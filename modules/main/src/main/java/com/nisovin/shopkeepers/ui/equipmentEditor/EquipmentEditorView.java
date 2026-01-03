@@ -70,7 +70,7 @@ public class EquipmentEditorView extends View {
 			if (slotIndex >= inventory.getSize()) break;
 
 			@Nullable UnmodifiableItemStack equipmentItem = currentEquipment.get(equipmentSlot);
-			ItemStack editorItem = this.toEditorEquipmentItem(equipmentSlot, ItemUtils.asItemStackOrNull(equipmentItem));
+			ItemStack editorItem = this.toEditorEquipmentItem(equipmentSlot, equipmentItem != null ? equipmentItem.copy() : null);
 			inventory.setItem(slotIndex, editorItem);
 		}
 	}

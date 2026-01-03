@@ -98,7 +98,7 @@ public final class ItemData {
 			// getKey instead of getKeyOrThrow: Compatible with both Spigot and Paper.
 			var itemTypeKey = RegistryUtils.getKeyOrThrow(value.getType());
 
-			var componentsData = ItemStackComponentsData.of(ItemUtils.asItemStack(value.dataItem));
+			var componentsData = ItemStackComponentsData.of(value.dataItem.copy());
 			if (componentsData == null) {
 				// Use a more compact representation if there is no components data:
 				return NamespacedKeySerializers.DEFAULT.serialize(itemTypeKey);
@@ -305,7 +305,7 @@ public final class ItemData {
 		// Lazily cache the serialized data:
 		if (serializedMetaData == null) {
 			// Not null after initialization:
-			serializedMetaData = ItemStackMetaTag.of(ItemUtils.asItemStack(dataItem));
+			serializedMetaData = ItemStackMetaTag.of(dataItem.copy());
 		}
 		assert serializedMetaData != null;
 		return serializedMetaData;
@@ -346,7 +346,7 @@ public final class ItemData {
 	}
 
 	public boolean matches(@Nullable UnmodifiableItemStack item) {
-		return this.matches(ItemUtils.asItemStackOrNull(item));
+		return this.matches(item != null ? item.copy() : null);
 	}
 
 	public boolean matches(@ReadOnly @Nullable ItemStack item, boolean matchPartialLists) {
@@ -360,7 +360,7 @@ public final class ItemData {
 	}
 
 	public boolean matches(@Nullable UnmodifiableItemStack item, boolean matchPartialLists) {
-		return this.matches(ItemUtils.asItemStackOrNull(item), matchPartialLists);
+		return this.matches(item != null ? item.copy() : null, matchPartialLists);
 	}
 
 	public boolean matches(@Nullable ItemData itemData) {

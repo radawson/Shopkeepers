@@ -4,8 +4,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import com.nisovin.shopkeepers.compat.Compat;
-import com.nisovin.shopkeepers.compat.CompatProvider;
 import com.nisovin.shopkeepers.util.annotations.ReadOnly;
 
 /**
@@ -24,7 +22,7 @@ import com.nisovin.shopkeepers.util.annotations.ReadOnly;
 public class ItemStackMetaTag {
 
 	public static ItemStackMetaTag of(@ReadOnly @Nullable ItemStack itemStack) {
-		return Compat.getProvider().getItemStackMetaTag(itemStack);
+		return ItemStackNmsUtils.getItemStackMetaTag(itemStack);
 	}
 
 	// Null if the source item stack has no meta data:
@@ -43,6 +41,6 @@ public class ItemStackMetaTag {
 	}
 
 	public boolean matches(ItemStackMetaTag other, boolean matchPartialLists) {
-		return Compat.getProvider().matches(other, this, matchPartialLists);
+		return ItemStackNmsUtils.matches(other, this, matchPartialLists);
 	}
 }
