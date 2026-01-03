@@ -13,8 +13,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.nisovin.shopkeepers.SKShopkeepersPlugin;
 import com.nisovin.shopkeepers.api.user.User;
-import com.nisovin.shopkeepers.commands.arguments.AmbiguousUserNameHandler;
-import com.nisovin.shopkeepers.commands.lib.util.ObjectMatcher;
 import com.nisovin.shopkeepers.user.SKUser;
 import com.nisovin.shopkeepers.util.bukkit.EntityUtils;
 import com.nisovin.shopkeepers.util.bukkit.TextUtils;
@@ -301,15 +299,7 @@ public final class UserArgumentUtils {
 			Iterable<? extends User> matches,
 			int maxEntries
 	) {
-		var ambiguousUserNameHandler = new AmbiguousUserNameHandler(name, matches, maxEntries);
-		if (ambiguousUserNameHandler.isInputAmbiguous()) {
-			var errorMsg = ambiguousUserNameHandler.getErrorMsg();
-			assert errorMsg != null;
-			TextUtils.sendMessage(sender, errorMsg);
-			return true;
-		}
-
-		return false;
+		return AmbiguousUserNameHandler.handleAmbiguousUserName(sender, name, matches, maxEntries);
 	}
 
 	private UserArgumentUtils() {

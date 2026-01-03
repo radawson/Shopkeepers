@@ -129,6 +129,7 @@ Shopkeepers has been modernized with the following improvements:
 
 * **Paper-Only**: This branch is built exclusively for Paper servers, providing better performance and access to Paper-specific features
 * **Paper API**: Migrated from deprecated Bukkit/Spigot APIs to modern Paper API
+* **Brigadier Commands**: Complete command system rewrite using Paper's Brigadier Command API for client-side validation and rich suggestions
 * **Mojang Mappings**: Uses Mojang mappings instead of Spigot mappings for better compatibility and faster updates
 * **Java 21+**: Updated to require Java 21 for better performance and modern language features
 * **ServiceIO Integration**: Enhanced support for ServiceIO (modern Vault replacement)

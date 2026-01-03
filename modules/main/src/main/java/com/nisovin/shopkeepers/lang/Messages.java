@@ -969,6 +969,24 @@ public class Messages extends Config {
 	// --- Editor messages ---
 	public static Text editorShopName = Text.color(ChatColor.YELLOW).text("Shop Type: {type}");
 
+	// --- Brigadier command messages ---
+	public static Text debugModeEnabled = Text.parse("&aDebug mode has been &2enabled&a.");
+	public static Text debugModeDisabled = Text.parse("&aDebug mode has been &cdisabled&a.");
+	public static Text debugOptionEnabled = Text.parse("&aDebug option '&e{option}&a' has been &2enabled&a.");
+	public static Text debugOptionDisabled = Text.parse("&aDebug option '&e{option}&a' has been &cdisabled&a.");
+	public static Text unknownDebugOption = Text.parse("&cUnknown debug option: '&e{option}&c'");
+	public static Text configReloaded = Text.parse("&aConfiguration has been reloaded.");
+	public static Text configReloadFailed = Text.parse("&cFailed to reload the configuration! Check the console for details.");
+	public static Text commandPlayerOnly = Text.parse("&cThis command can only be executed by a player.");
+	public static Text playerNotFound = Text.parse("&cPlayer '&e{player}&c' not found.");
+	public static Text unknownShopkeeper = Text.parse("&cNo shopkeeper found for '&e{shopkeeper}&c'.");
+	public static Text ambiguousShopkeeper = Text.parse("&cMultiple shopkeepers found. Please specify the shopkeeper explicitly.");
+	public static Text shopCreationItemsGiveDisabled = Text.parse("&cShop creation items are disabled.");
+	public static Text shopCreationItemsReceived2 = Text.parse("&aYou have received &e{amount}&a shop creation item(s).");
+	public static Text currencyItemsGiveDisabled = Text.parse("&cCurrency items are disabled.");
+	public static Text currencyItemsReceived2 = Text.parse("&aYou have received &6{amount}x&a currency item '&e{currency}&a'.");
+	public static Text inventoryFull = Text.parse("&c{player}'s inventory is full. Some items could not be given.");
+
 	/////
 
 	private static final String LANG_FOLDER = "lang";

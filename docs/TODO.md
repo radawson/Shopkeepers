@@ -29,47 +29,26 @@ Make all config keys consistent: Avoid spaces (e.g., 'owner uuid' → 'owner-uui
 
 Rename all occurrences of 'Shop/Shops' with 'Laden/Läden/Händler'?
 
-### Command Library Revamp
+### ✅ Command Library Revamp
 
-This is a large architectural change that would improve the command system:
+**Status:** Completed
 
-- Reverse the setup of arguments in parsing chains:
-  - Currently the parent argument delegates to child arguments, making the setup unnatural since fallbacks need to be specified first
-  - Instead, allow specifying the chain of arguments more naturally: `argument.fallback(fallback).fallback(fallback)` etc.
-- Support advanced text features (e.g., in helps page)
-- Allow arguments to change the following arguments, similar to how subcommands have different chains of arguments
-  - E.g., `/shopkeeper info ['own'|'admin'|<player>] <shopkeeper>`: Different suggestions/allowed arguments for the second argument depending on the first argument
-  - But: Avoid duplicate definition of common argument chains, if different chains are not required/used
-    - E.g., by defining an argument chain once and then reusing it for different sub-commands/arguments
-  - Maybe even dynamically, by allowing arguments that get parameterized by the arguments parsed before
-    - E.g., `/region <region> removeMember <member>`: Only suggest members that are part of the region
-- Bind executing code directly to an argument chain, to avoid having to manually check the CommandContext for which arguments got actually parsed
-- Allow for easier debugging of command execution and argument parsing (without introducing plugin-specific logging dependencies into the library classes).
-  - Maybe define separate logging interface for the command lib, currently the Log class is used directly
-  - The same applies for any other utilities and plugin-specific stuff
-- Dealing with ambiguities:
-  - Example: `/list [player (default:sender)] [page (default:1)]`
-    - `/list 123` ("123" is a valid player name!)
-    - Also: `/list 123 2` would currently try to parse "123" as page number and then print an error due to the unexpected "2" due to the fallback mechanic used for the player argument
-  - Warning if command/arguments allow for ambiguity? E.g., by letting arguments provide a list of examples and evaluating all possible combinations
-  - Parse all possible argument assignments and print a warning if the input is ambiguous?
-  - Allow resolving ambiguities by explicitly binding arguments, e.g., `/list player=blablubbabc page=3`
-    - Or `::` or `:=` or `!=`? `=` might likely be used/useful in various arguments as well, and `:` alone is ambiguous because the use in namespaces
-    - Or `/list -player blablubbabc -page 2`? Or `/list !player=blablubbabc !page=2`?
-      - Or `/list --player blablubbabc --page 2`
-    - But: requires users to know the exact argument name: issue when arguments can have aliases? (e.g., for literals, especially if the command format uses an alias instead of the actual argument name)
-    - Also: what about sub-arguments? Is it required to be able to explicitly specify which sub-argument an arg is meant to bind to? sub-arguments are usually an implementation detail
-    - Or: `/list '' '2'` (quotes contain the arg(s) that get bound to specific arguments; including marking empty arguments explicitly)
-    - Or: use some separator that marks which arg(s) get bound to which arguments, e.g.: `/list | | 2`
-    - Or: use special character/marker to explicitly mark missing arguments: `/list ! 2`, or `/list _ 2`
-      - However: Does not allow resolving all kinds of ambiguities! E.g., if arguments parse multiple args: `/cmd [multiple args (here] and there)` ('here' may be the last arg of the first argument, or the first arg of the second argument)
-      - → Special character marks 'end of current argument': Allows marking missing arguments, as well as using it as argument delimiter
-  - Also allow for multi-part arguments: `/text text='some text'`
-  - And empty/missing argument: `/list player='' 1` (player argument is optional)
-  - Problem: FirstOf arguments with literals can internally have ambiguities as well, e.g., `/list <'all'|player>` (with an existing player named 'all')
-    - This is only a problem if the sub arguments are joined to a single name in the argument format (which unusual if literal arguments are involved)
-- Allow quoted string parsing `'some text'` (accepting `""` and `''` and `` ` ``)
-  - Also: `{some: map, like: data}`
+The command system has been completely rewritten to use Paper's native Brigadier Command API:
+
+- **Brigadier Integration**: All commands now use Minecraft's Brigadier command framework via Paper's API
+- **Client-side Validation**: Commands are validated on the client before being sent, providing immediate feedback
+- **Rich Suggestions**: Tab-completion suggestions are provided by the server with proper context awareness
+- **Natural Command Trees**: Subcommands and arguments follow Brigadier's natural tree structure
+- **Permission-based Visibility**: Commands are hidden from players who don't have permission to use them
+- **Custom Argument Types**: Implemented custom argument types for shopkeepers, shop types, players, etc.
+
+The new command system is located in `commands/brigadier/` with:
+- `BrigadierCommandManager`: Handles command registration via Paper's Lifecycle API
+- `ShopkeepersCommandTree`: Builds the complete command tree
+- `arguments/`: Custom Brigadier argument types with suggestions
+- `executors/`: Command execution logic for each subcommand
+
+The old custom command library has been fully removed. Command utilities are now in `commands/util/`.
 
 ### ✅ Chest Sharing
 
