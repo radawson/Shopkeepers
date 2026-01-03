@@ -1,4 +1,4 @@
-package com.nisovin.shopkeepers.compat.v1_21_R5_paper;
+package com.nisovin.shopkeepers.compat.v1_21_11;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
