@@ -394,12 +394,15 @@ not-owner: "&7You are not the owner of this shopkeeper."
 owner-set: "&aThe new owner is now &e{owner}"
 shop-creation-items-given: "&aPlayer &e{player}&a has received &e{amount}&a shop creation item(s)!"
 shop-creation-items-received: "&aYou have received &e{amount}&a shop creation item(s)!"
+shop-creation-items-give-disabled: "&cShop creation items are disabled."
 unknown-currency: "&cUnknown currency: '&e{currency}&c'"
 currency-items-given: "&aPlayer &e{player}&a has received &6{amount}x&a currency item '&e{currency}&a'!"
 currency-items-received: "&aYou have received &6{amount}x&a currency item '&e{currency}&a'!"
+currency-items-give-disabled: "&cCurrency items are disabled."
 must-hold-item-in-main-hand: "&7You must hold an item in your main hand."
 currency-item-set-to-main-hand-item: "&aThe currency item '&e{currencyId}&a' has been set to the &eitem in your main hand&a!"
 items-updated: "&aUpdated &e{count}&a item(s)!"
+inventory-full: "&c{player}'s inventory is full. Some items could not be given."
 unknown-book-author: "Unknown"
 
 trade-perm-set: "&aThe shop's trading permission has been set to '&e{perm}&a'!"
@@ -822,3 +825,36 @@ command-description-snapshot-remove: "Removes a specific or all snapshots of a s
 command-description-snapshot-restore: "Restores a specific shop snapshot."
 command-description-edit-villager: "Opens the editor for the target villager."
 command-description-replace-all-with-vanilla-villagers: "Replaces all shopkeepers with vanilla villagers without AI."
+
+# Snapshot error messages
+snapshot-error: "&cAn error occurred while handling snapshots."
+
+# Shop removal messages
+no-shopkeepers-found: "&cNo shopkeepers found matching the criteria."
+cannot-remove-targeted-shops: "&cCannot remove any of the targeted shopkeepers (check permissions?)."
+confirm-remove-multiple-shops: "&6Ambiguous target. Found {count} shopkeepers you can remove: {list}."
+removed-multiple-shops: "&aRemoved {success} shopkeepers. {fail} failed."
+
+# Editor messages
+editor-shop-name: "&eShop Type: {type}"
+
+# Debug messages
+debug-mode-enabled: "&aDebug mode has been &2enabled&a."
+debug-mode-disabled: "&aDebug mode has been &cdisabled&a."
+debug-option-enabled: "&aDebug option '&e{option}&a' has been &2enabled&a."
+debug-option-disabled: "&aDebug option '&e{option}&a' has been &cdisabled&a."
+unknown-debug-option: "&cUnknown debug option: '&e{option}&c'"
+
+# Config messages
+config-reloaded: "&aConfiguration has been reloaded."
+config-reload-failed: "&cFailed to reload the configuration! Check the console for details."
+
+# Command messages
+command-player-only: "&cThis command can only be executed by a player."
+player-not-found: "&cPlayer '&e{player}&c' not found."
+unknown-shopkeeper: "&cNo shopkeeper found for '&e{shopkeeper}&c'."
+ambiguous-shopkeeper: "&cMultiple shopkeepers found. Please specify the shopkeeper explicitly."
+
+# Item messages
+shop-creation-items-received2: "&aYou have received &e{amount}&a shop creation item(s)."
+currency-items-received2: "&aYou have received &6{amount}x&a currency item '&e{currency}&a'."
